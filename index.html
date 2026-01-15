@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comprehensive Learning Path Discovery Questionnaire</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="container py-16">
+      <h1>YOUR Learning Path Discovery Questionnaire</h1>
+      <p>
+        Welcome! This comprehensive self-reflection tool is designed to help YOU clarify your
+        background, interests, goals, and preferences for your educational and career journey.
+        This questionnaire contains 113 questions across 15 sections - all questions are optional,
+        so answer only what feels helpful and relevant to you.
+      </p>
+      <div class="card my-8">
+        <div class="card__body">
+          <h3>How This Works</h3>
+          <ul>
+            <li><strong>Take your time</strong> - This is about YOUR self-discovery</li>
+            <li><strong>All questions are optional</strong> - Skip anything that doesn't apply</li>
+            <li><strong>Your responses auto-save</strong> - You can return anytime to continue</li>
+            <li><strong>Navigate freely</strong> - Use the section buttons to jump around</li>
+            <li><strong>Download when done</strong> - Get a complete file of YOUR responses</li>
+            <li><strong>Get AI recommendations</strong> - Click "Get My Recommendations" for personalized guidance</li>
+          </ul>
+          <p class="text-sm color-text-secondary mt-8">
+            <strong>Privacy:</strong> Your answers remain completely private in your browser. 
+            No data is sent to any server except when you request AI recommendations.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <nav class="section-nav container flex flex-wrap gap-4" id="sectionNav">
+      <!-- Navigation links are injected by app.js -->
+    </nav>
+
+    <div class="container">
+      <div class="progress">
+        <div class="progress__bar" id="progressBar"></div>
+      </div>
+      <p class="text-sm color-text-secondary mb-8" id="progressText">
+        0 of 113 questions answered (0%)
+      </p>
+    </div>
+
+    <main class="container" id="formContainer">
+      <form id="questionnaire" class="flex flex-col gap-16">
+        <!-- Questions are injected by app.js -->
+      </form>
+
+      <div class="py-16 flex justify-between items-center flex-wrap gap-16">
+        <button type="button" id="downloadBtn" class="btn btn--primary btn--lg">
+          📄 Download MY Responses
+        </button>
+        <button type="button" id="resetBtn" class="btn btn--secondary btn--lg">
+  Reset / Clear Form
+</button>
+
+        <div class="text-sm color-text-secondary">
+          <strong>Remember:</strong> All questions are optional - answer what feels right for YOU
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div id="resultsSection" class="py-16 hidden">
+        <div class="card">
+          <div class="card__body">
+            <h2>Your Personalized Learning Path Recommendations</h2>
+            <div id="loadingSpinner" class="text-center py-16 hidden">
+              <div class="spinner"></div>
+              <p class="mt-8">Analyzing your responses and generating personalized recommendations...</p>
+            </div>
+            <div id="analysisResults" class="mt-16"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="container py-16">
+      <div class="card">
+        <div class="card__body">
+          <h3>What Happens Next?</h3>
+          <p>
+            Once you download your responses, you can use this comprehensive self-assessment to:
+          </p>
+          <ul>
+            <li>Share with career counselors, advisors, or mentors for personalized guidance</li>
+            <li>Use with AI tools to get customized recommendations for courses and opportunities</li>
+            <li>Apply for scholarships that match your background and goals</li>
+            <li>Explore educational programs that align with your learning style and interests</li>
+            <li>Reflect on your journey and track how your goals evolve over time</li>
+          </ul>
+          <p class="text-sm color-text-secondary mt-8">
+            <strong>Your Privacy:</strong> This questionnaire runs entirely in your browser. 
+            Your responses are never transmitted to any server except when you request AI analysis.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+    
+    <style>
+      .spinner {
+        border: 4px solid var(--color-secondary);
+        border-top: 4px solid var(--color-primary);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .hidden {
+        display: none !important;
+      }
+      
+      #analysisResults {
+        line-height: 1.6;
+      }
+      
+      #analysisResults h3 {
+        color: var(--color-primary);
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+      
+      #analysisResults h4 {
+        color: var(--color-text);
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      #analysisResults ul {
+        margin: 1rem 0;
+        padding-left: 1.5rem;
+      }
+      
+      #analysisResults li {
+        margin: 0.5rem 0;
+      }
+      
+      #analysisResults p {
+        margin: 1rem 0;
+      }
+      
+      #analysisResults strong {
+        color: var(--color-primary);
+      }
+    </style>
+  </body>
+</html>
