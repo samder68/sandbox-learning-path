@@ -395,6 +395,11 @@ class QuestionnaireApp {
     }
   }
 
+        const resetBtn = document.getElementById('resetBtn');
+        if (resetBtn) {
+                  resetBtn.addEventListener('click', () => this.resetForm());
+                }
+
   navigateToSection(sectionIndex) {
     this.currentSection = sectionIndex;
     const sectionElement = document.querySelector(`#section-${sectionIndex}`);
@@ -602,6 +607,28 @@ class QuestionnaireApp {
     }
   }
 }
+
+  resetForm() {
+          if (confirm('Are you sure you want to clear all your responses? This cannot be undone.')) {
+                    // Clear localStorage
+                    localStorage.removeItem('questionnaireResponses');
+                    // Clear the responses object
+                    this.responses = {};
+                    // Clear all form inputs
+                    document.querySelectorAll('input[type="text"], input[type="radio"], input[type="checkbox"], textarea').forEach(input => {
+                                if (input.type === 'radio' || input.type === 'checkbox') {
+                                              input.checked = false;
+                                            } else {
+                                              input.value = '';
+                                            }
+                              });
+                    // Update progress to show 0
+                    this.updateProgress();
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    alert('Form has been cleared successfully!');
+                  }
+        }
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
