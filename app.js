@@ -393,12 +393,14 @@ class QuestionnaireApp {
       // We bind the `analyzeResponses` method here
       analyzeBtn.addEventListener('click', this.analyzeResponses);
     }
-  }
 
-        const resetBtn = document.getElementById('resetBtn');
+              const resetBtn = document.getElementById('resetBtn');
         if (resetBtn) {
                   resetBtn.addEventListener('click', () => this.resetForm());
                 }
+
+  }
+
 
   navigateToSection(sectionIndex) {
     this.currentSection = sectionIndex;
