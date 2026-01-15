@@ -1,7 +1,5 @@
 // Questionnaire data with all 113 questions across 15 sections
 const questionnaireData = [
-    // --- PASTE YOUR FULL questionnaireData ARRAY HERE ---
-    // (It's too long to include again, just copy it from your original app.js file)
   {
     title: "Why Are YOU Here? (Goals)",
     questions: [
@@ -173,7 +171,7 @@ const questionnaireData = [
     questions: [
       { type: "textarea", text: "Describe a significant accomplishment you're proud of", hasTextbox: true, textboxPrompt: "This could be from work, school, personal life, volunteering, etc." },
       { type: "textarea", text: "Tell me about a time you overcame a major challenge or obstacle", hasTextbox: true, textboxPrompt: "What strategies did you use? What did you learn about yourself?" },
-      { type: "textarea", "text": "When have you helped others achieve their goals or solve problems?", hasTextbox: true, textboxPrompt: "Think about formal mentoring, informal help, or any way you've made a difference." },
+      { type: "textarea", text: "When have you helped others achieve their goals or solve problems?", hasTextbox: true, textboxPrompt: "Think about formal mentoring, informal help, or any way you've made a difference." },
       { type: "textarea", text: "What project or achievement taught you the most about yourself?", hasTextbox: true, textboxPrompt: "What did you discover about your strengths, interests, or values?" },
       { type: "checkbox", text: "What strengths do others often compliment you on? (Select all that apply)", options: ["Problem-solving", "Communication", "Leadership", "Creativity", "Organization", "Empathy/emotional intelligence", "Technical skills", "Reliability", "Teaching/explaining", "Teamwork", "Other"] },
       { type: "textarea", text: "Describe a time when you had to learn something completely new - how did you approach it?", hasTextbox: true, textboxPrompt: "Think about your learning process and what strategies worked." },
@@ -233,9 +231,6 @@ class QuestionnaireApp {
   constructor() {
     this.responses = this.loadResponses();
     this.currentSection = 0;
-    this.autoSaveInterval = null;
-    // Bind the analyze method to the class instance
-    this.analyzeResponses = this.analyzeResponses.bind(this);
     this.init();
   }
 
@@ -250,8 +245,7 @@ class QuestionnaireApp {
   renderNavigation() {
     const nav = document.getElementById('sectionNav');
     nav.innerHTML = questionnaireData.map((section, index) =>
-      `<button type="button" class="section-nav-btn ${index === this.currentSection ? 'active' : ''}" 
-              data-section="${index}">
+      `<button type="button" class="section-nav-btn ${index === this.currentSection ? 'active' : ''}" data-section="${index}">
         ${index + 1}. ${section.title}
       </button>`
     ).join('');
@@ -260,379 +254,261 @@ class QuestionnaireApp {
   renderForm() {
     const form = document.getElementById('questionnaire');
     form.innerHTML = '';
-
-    questionnaireData.forEach((section, sectionIndex) => {
-      const sectionDiv = document.createElement('div');
-      sectionDiv.className = 'section';
-      sectionDiv.id = `section-${sectionIndex}`;
-
-      sectionDiv.innerHTML = `
-        <h2 class="section__title">${section.title}</h2>
-        ${section.questions.map((question, questionIndex) =>
-        this.renderQuestion(question, sectionIndex, questionIndex)
-      ).join('')}
-      `;
-
-      form.appendChild(sectionDiv);
+    questionnaireData.forEach((section, sIndex) => {
+      const div = document.createElement('div');
+      div.className = 'section';
+      div.id = `section-${sIndex}`;
+      div.innerHTML = `<h2 class="section__title">${section.title}</h2>` + 
+        section.questions.map((q, qIndex) => this.renderQuestion(q, sIndex, qIndex)).join('');
+      form.appendChild(div);
     });
   }
 
-  renderQuestion(question, sectionIndex, questionIndex) {
-    // We add a specific ID for the location question to easily grab its value later
-    const questionId = question.id ? question.id : `q_${sectionIndex}_${questionIndex}`;
-    const savedValue = this.responses[questionId] || '';
-
+  renderQuestion(q, sIndex, qIndex) {
+    const qId = q.id || `q_${sIndex}_${qIndex}`;
+    const val = this.responses[qId] || '';
     let inputHTML = '';
 
-    switch (question.type) {
+    switch (q.type) {
       case 'text':
-        // Use the questionId for both id and name
-        inputHTML = `<input type="text" id="${questionId}" name="${questionId}" value="${savedValue}" class="form-control">`;
+        inputHTML = `<input type="text" name="${qId}" value="${val}" class="form-control">`;
         break;
-
       case 'textarea':
-        inputHTML = `<textarea id="${questionId}" name="${questionId}" class="form-control" rows="3">${savedValue}</textarea>`;
+        inputHTML = `<textarea name="${qId}" class="form-control" rows="3">${val}</textarea>`;
         break;
-
       case 'radio':
-        inputHTML = `
-          <div class="radio-group">
-            ${question.options.map((option, optionIndex) => `
-              <div class="radio-option">
-                <input type="radio" id="${questionId}_${optionIndex}" name="${questionId}" 
-                       value="${option}" ${savedValue === option ? 'checked' : ''}>
-                <label for="${questionId}_${optionIndex}">${option}</label>
-              </div>
-            `).join('')}
-          </div>
-        `;
+        inputHTML = `<div class="radio-group">${q.options.map((opt, i) => `
+          <div class="radio-option">
+            <input type="radio" id="${qId}_${i}" name="${qId}" value="${opt}" ${val === opt ? 'checked' : ''}>
+            <label for="${qId}_${i}">${opt}</label>
+          </div>`).join('')}</div>`;
         break;
-
       case 'checkbox':
-        const savedValues = Array.isArray(savedValue) ? savedValue : (savedValue ? [savedValue] : []);
-        inputHTML = `
-          <div class="checkbox-group">
-            ${question.options.map((option, optionIndex) => `
-              <div class="checkbox-option">
-                <input type="checkbox" id="${questionId}_${optionIndex}" name="${questionId}" 
-                       value="${option}" ${savedValues.includes(option) ? 'checked' : ''}>
-                <label for="${questionId}_${optionIndex}">${option}</label>
-              </div>
-            `).join('')}
-          </div>
-        `;
+        const vals = Array.isArray(val) ? val : [];
+        inputHTML = `<div class="checkbox-group">${q.options.map((opt, i) => `
+          <div class="checkbox-option">
+            <input type="checkbox" id="${qId}_${i}" name="${qId}" value="${opt}" ${vals.includes(opt) ? 'checked' : ''}>
+            <label for="${qId}_${i}">${opt}</label>
+          </div>`).join('')}</div>`;
         break;
-
       case 'rating':
-        const labels = question.labels || ["Strongly Disagree", "Strongly Agree"];
-        inputHTML = `
-          <div class="rating-scale">
-            <div class="rating-inputs">
-              ${Array.from({ length: question.scale }, (_, i) => i + 1).map(num => `
-                <label>
-                  <input type="radio" name="${questionId}" value="${num}" 
-                         ${savedValue == num ? 'checked' : ''}>
-                  ${num}
-                </label>
-              `).join('')}
-            </div>
-          </div>
-          <div class="rating-scale__labels">
-            <span>${labels[0]}</span>
-            <span>${labels[1]}</span>
-          </div>
-        `;
+        const labels = q.labels || ["Strongly Disagree", "Strongly Agree"];
+        inputHTML = `<div class="rating-scale"><div class="rating-inputs">` +
+          Array.from({ length: q.scale }, (_, i) => i + 1).map(n => `
+            <label><input type="radio" name="${qId}" value="${n}" ${val == n ? 'checked' : ''}> ${n}</label>
+          `).join('') + `</div></div><div class="rating-scale__labels"><span>${labels[0]}</span><span>${labels[1]}</span></div>`;
         break;
     }
 
     let textboxHTML = '';
-    if (question.hasTextbox) {
-      const textboxId = `${questionId}_textbox`;
-      const textboxValue = this.responses[textboxId] || '';
-      textboxHTML = `
-        <div class="question__textbox">
-          <label for="${textboxId}" class="question__textbox-label">
-            ${question.textboxPrompt || 'Please elaborate:'}
-          </label>
-          <textarea id="${textboxId}" name="${textboxId}" class="form-control" rows="3" placeholder="Optional - add any additional thoughts here...">${textboxValue}</textarea>
-        </div>
-      `;
+    if (q.hasTextbox) {
+      const tId = `${qId}_textbox`;
+      textboxHTML = `<div class="question__textbox"><label class="question__textbox-label">${q.textboxPrompt}</label>
+               <textarea name="${tId}" class="form-control" rows="2">${this.responses[tId] || ''}</textarea></div>`;
     }
 
-    return `
-      <div class="question">
-        <div class="question__number">Question ${sectionIndex + 1}.${questionIndex + 1}</div>
-        <div class="question__text">${question.text}</div>
-        <div class="question__input">
-          ${inputHTML}
-        </div>
-        ${textboxHTML}
-      </div>
-    `;
+    return `<div class="question">
+              <div class="question__number">Question ${sIndex + 1}.${qIndex + 1}</div>
+              <div class="question__text">${q.text}</div>
+              <div class="question__input">${inputHTML}</div>
+              ${textboxHTML}
+            </div>`;
   }
 
   setupEventListeners() {
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('section-nav-btn')) {
-        const sectionIndex = parseInt(e.target.dataset.section);
-        this.navigateToSection(sectionIndex);
-      }
+    document.getElementById('sectionNav').addEventListener('click', (e) => {
+      if (e.target.dataset.section) this.navigateToSection(parseInt(e.target.dataset.section));
     });
 
     document.getElementById('questionnaire').addEventListener('input', (e) => {
-      this.handleInputChange(e);
+      const name = e.target.name;
+      if (e.target.type === 'checkbox') {
+        const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+        this.responses[name] = checked;
+      } else {
+        this.responses[name] = e.target.value;
+      }
+      this.updateProgress();
     });
 
-    const downloadBtn = document.getElementById('downloadBtn');
-    if (downloadBtn) {
-      downloadBtn.addEventListener('click', () => this.downloadResponses());
-    }
-
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    if (analyzeBtn) {
-      // We bind the `analyzeResponses` method here
-      analyzeBtn.addEventListener('click', this.analyzeResponses);
-    }
-
-              const resetBtn = document.getElementById('resetBtn');
-        if (resetBtn) {
-                  resetBtn.addEventListener('click', () => this.resetForm());
-                }
-
+    document.getElementById('downloadBtn').addEventListener('click', () => this.downloadCombinedFile());
+    document.getElementById('resetBtn').addEventListener('click', () => this.resetForm());
   }
 
-
-  navigateToSection(sectionIndex) {
-    this.currentSection = sectionIndex;
-    const sectionElement = document.querySelector(`#section-${sectionIndex}`);
-    if (sectionElement) {
-      sectionElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-
-    document.querySelectorAll('.section-nav-btn').forEach((btn, index) => {
-      btn.classList.toggle('active', index === sectionIndex);
-    });
-  }
-
-  handleInputChange(e) {
-    const input = e.target;
-    const questionId = input.name;
-    if (!questionId) return;
-
-    if (input.type === 'checkbox') {
-      const checkboxes = document.querySelectorAll(`input[name="${questionId}"]`);
-      this.responses[questionId] = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-    } else {
-      this.responses[questionId] = input.value;
-    }
-    this.updateProgress();
+  navigateToSection(idx) {
+    this.currentSection = idx;
+    document.getElementById(`section-${idx}`).scrollIntoView({ behavior: 'smooth' });
+    document.querySelectorAll('.section-nav-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
   }
 
   updateProgress() {
-    const totalQuestions = questionnaireData.reduce((sum, section) => sum + section.questions.length, 0);
-    const answeredQuestions = Object.keys(this.responses).filter(key => {
-      if (key.includes('_textbox')) return false;
-      const value = this.responses[key];
-      return Array.isArray(value) ? value.length > 0 : (value && value.trim() !== '');
-    }).length;
-
-    const percentage = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
-
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
-
-    if (progressBar) progressBar.style.width = `${percentage}%`;
-    if (progressText) progressText.textContent = `${answeredQuestions} of ${totalQuestions} questions answered (${percentage}%)`;
+    const total = questionnaireData.reduce((acc, s) => acc + s.questions.length, 0);
+    const answered = Object.keys(this.responses).filter(k => !k.endsWith('_textbox') && this.responses[k]?.length > 0).length;
+    const pct = Math.round((answered / total) * 100);
+    const pb = document.getElementById('progressBar');
+    const pt = document.getElementById('progressText');
+    if (pb) pb.style.width = `${pct}%`;
+    if (pt) pt.textContent = `${answered} of ${total} questions answered (${pct}%)`;
   }
 
   startAutoSave() {
-    this.autoSaveInterval = setInterval(() => {
-      this.saveResponses();
-      this.showAutoSaveIndicator();
-    }, 30000);
-  }
-
-  saveResponses() {
-    // In a real app, this would use localStorage or send to a server.
-    // For this example, responses are saved in memory.
-    localStorage.setItem('questionnaireResponses', JSON.stringify(this.responses));
+    setInterval(() => localStorage.setItem('user_responses', JSON.stringify(this.responses)), 5000);
   }
 
   loadResponses() {
-    // Load responses from localStorage if they exist
-    const saved = localStorage.getItem('questionnaireResponses');
-    return saved ? JSON.parse(saved) : {};
+    return JSON.parse(localStorage.getItem('user_responses')) || {};
   }
 
-  showAutoSaveIndicator() {
-    let indicator = document.querySelector('.auto-save-indicator');
-    if (!indicator) {
-      indicator = document.createElement('div');
-      indicator.className = 'auto-save-indicator';
-      indicator.textContent = 'Responses auto-saved';
-      document.body.appendChild(indicator);
+  resetForm() {
+    if (confirm("WARNING: This will permanently delete all your responses on this device. Do you want to continue?")) {
+      localStorage.removeItem('user_responses');
+      window.location.reload();
     }
-
-    indicator.classList.add('show');
-    setTimeout(() => indicator.classList.remove('show'), 2000);
   }
 
-  // NEW METHOD: Generate a clean, human-readable text blob of responses
-  generateResponsesText() {
-    let content = 'USER QUESTIONNAIRE RESPONSES\n\n';
-    questionnaireData.forEach((section, sectionIndex) => {
-      let sectionHasAnswer = false;
-      let sectionContent = `--- SECTION: ${section.title.toUpperCase()} ---\n`;
-      let questionsContent = '';
-
-      section.questions.forEach((question, questionIndex) => {
-        const questionId = question.id || `q_${sectionIndex}_${questionIndex}`;
-        const answer = this.responses[questionId];
-        const textboxId = `${questionId}_textbox`;
-        const textboxAnswer = this.responses[textboxId];
-
-        let hasAnswer = false;
-        if (answer && (Array.isArray(answer) ? answer.length > 0 : String(answer).trim() !== '')) {
-          hasAnswer = true;
-        }
-        if (textboxAnswer && textboxAnswer.trim() !== '') {
-          hasAnswer = true;
-        }
-
-        if (hasAnswer) {
-          sectionHasAnswer = true;
-          questionsContent += `\nQ: ${question.text}\n`;
-          if (answer && (Array.isArray(answer) ? answer.length > 0 : String(answer).trim() !== '')) {
-            questionsContent += `A: ${Array.isArray(answer) ? answer.join(', ') : answer}\n`;
-          }
-          if (textboxAnswer && textboxAnswer.trim()) {
-            questionsContent += `Additional notes: ${textboxAnswer}\n`;
-          }
+  downloadCombinedFile() {
+    let responseText = '';
+    questionnaireData.forEach((section, sIndex) => {
+      responseText += `\n--- SECTION: ${section.title.toUpperCase()} ---\n`;
+      section.questions.forEach((q, qIndex) => {
+        const qId = q.id || `q_${sIndex}_${qIndex}`;
+        const ans = this.responses[qId];
+        const textAns = this.responses[`${qId}_textbox`];
+        if (ans || textAns) {
+          responseText += `Q: ${q.text}\n`;
+          if (ans) responseText += `A: ${Array.isArray(ans) ? ans.join(', ') : ans}\n`;
+          if (textAns) responseText += `Notes: ${textAns}\n`;
         }
       });
-
-      if (sectionHasAnswer) {
-        content += sectionContent + questionsContent + '\n';
-      }
     });
-    return content;
-  }
 
-  // NEW METHOD: Simple markdown to HTML converter
-  formatAnalysisToHTML(text) {
-    return text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-      .replace(/\n\s*\*\s(.*?)/g, '\n<ul><li>$1</li></ul>') // Bullets
-      .replace(/(<\/ul>\n<ul>)/g, '') // Merge adjacent bullet lists
-      .replace(/(\r\n|\n|\r)/gm, '<br>') // Line breaks
-      .replace(/<br><br>/g, '<p>') // Paragraphs
-      .replace(/🎯/g, '<h3>🎯') // Make main titles H3
-      .replace(/🎓/g, '<h3>🎓')
-      .replace(/💰/g, '<h3>💰')
-      .replace(/🗺️/g, '<h3>🗺️')
-      .replace(/📝/g, '<h3>📝')
-      .replace(/💌/g, '<h3>💌')
-      .replace(/Main Platform Links/g, '<h3>Main Platform Links')
-      .replace(/<br><h3>/g, '<h3>'); // Clean up spacing around new headers
-  }
-
-  async analyzeResponses() {
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    const resultsSection = document.getElementById('resultsSection');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const analysisResults = document.getElementById('analysisResults');
-
-    resultsSection.classList.remove('hidden');
-    loadingSpinner.classList.remove('hidden');
-    analysisResults.innerHTML = '';
-    analyzeBtn.disabled = true;
-    analyzeBtn.textContent = 'Analyzing...';
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
-
-    try {
-      const responsesText = this.generateResponsesText();
-      const location = this.responses['user-location'] || ''; // Get location
-
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ responsesText, location })
-      });
-
-      if (!response.ok) throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-
-      const data = await response.json();
-      if (!data.success) throw new Error(data.error || 'Analysis failed');
-      
-      // Use the new formatter here!
-      analysisResults.innerHTML = this.formatAnalysisToHTML(data.analysis);
-
-    } catch (error) {
-      console.error('Analysis failed:', error);
-      analysisResults.innerHTML = `
-        <div class="card" style="border-left: 4px solid var(--color-error);">
-          <div class="card__body">
-            <h3 style="color: var(--color-error);">Analysis Error</h3>
-            <p>Sorry, we encountered an error: ${error.message}</p>
-            <p>Please check your connection or try again. If the problem persists, the service might be temporarily down.</p>
-          </div>
-        </div>
-      `;
-    } finally {
-      loadingSpinner.classList.add('hidden');
-      analyzeBtn.disabled = false;
-      analyzeBtn.textContent = '🤖 Get My Recommendations';
-    }
-  }
-
-  downloadResponses() {
-    let content = 'YOUR LEARNING PATH DISCOVERY QUESTIONNAIRE RESPONSES\n\n';
-    content += this.generateResponsesText();
-    content += '\n--- END OF RESPONSES ---';
-
-    try {
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `learning_path_responses_${new Date().toISOString().split('T')[0]}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Download failed:', error);
-      alert('Download failed. Please try again.');
-    }
+    const combinedOutput = `INSTRUCTIONS FOR AI:\n\n${outputPromptText}\n\nUSER RESPONSES:\n${responseText}`;
+    const blob = new Blob([combinedOutput], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `MY_CAREER_DISCOVERY_${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }
 
-  resetForm() {
-          if (confirm('Are you sure you want to clear all your responses? This cannot be undone.')) {
-                    // Clear localStorage
-                    localStorage.removeItem('questionnaireResponses');
-                    // Clear the responses object
-                    this.responses = {};
-                    // Clear all form inputs
-                    document.querySelectorAll('input[type="text"], input[type="radio"], input[type="checkbox"], textarea').forEach(input => {
-                                if (input.type === 'radio' || input.type === 'checkbox') {
-                                              input.checked = false;
-                                            } else {
-                                              input.value = '';
-                                            }
-                              });
-                    // Update progress to show 0
-                    this.updateProgress();
-                    // Scroll to top
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    alert('Form has been cleared successfully!');
-                  }
-        }
+// Master prompt from outputprompt.txt 
+const outputPromptText = `prompt:
 
-// Initialize the app
-document.addEventListener('DOMContentLoaded', () => {
-  window.app = new QuestionnaireApp();
-});
+**Goal:** The goal of this questionnaire is to help individuals discover personalized learning and career paths by evaluating their personality, skills, interests, learning style, demographics, time commitment, and location. The aim is to provide actionable, location-aware recommendations that empower users to explore new opportunities, whether they are transitioning careers, returning to education, or seeking skills development.
+
+**Methodology:** The AI will analyze the user's questionnaire responses to assess their unique profile. It will consider strengths, preferences, challenges, and available resources. Based on this analysis, the AI will generate a tailored learning and career plan that includes specific free online courses with direct links, local training options relevant to the user's location, scholarship opportunities, and practical next steps.
+
+**PRIORITY FREE LEARNING PLATFORMS:** When recommending courses, prioritize drawing from these verified free educational platforms in order of preference:
+
+**Tier 1 - Completely Free Platforms:**
+- MIT OpenCourseWare
+- Khan Academy
+- freeCodeCamp
+- Harvard CS50 (edx.org/cs50)
+- Google Skillshop
+- HubSpot Academy
+- Microsoft Learn
+- YouTube official educational channels (specific named courses only)
+
+**Tier 2 - Free Access Available:**
+- Coursera (audit mode for free access)
+- edX (audit mode for free access)
+- Udemy (free courses section)
+- FutureLearn (free access option)
+- Alison
+- Class Central (aggregator for free courses)
+
+**Tier 3 - University Open Learning:**
+- Stanford Online
+- Open Learning Initiative (Carnegie Mellon)
+- Open Learning Initiative (Harvard)
+- OpenUW (University of Washington)
+- Open Yale
+- Open.Michigan (University of Michigan)
+- OpenLearn (The Open University)
+
+**Tier 4 - Specialized Free Platforms:**
+- Udacity (free tier)
+- Codecademy (free tier)
+- Other verified free educational resources
+
+**COMPREHENSIVE SCHOLARSHIP AND GRANT SEARCH METHODOLOGY:**
+When identifying scholarship opportunities, conduct a thorough search across multiple categories to ensure the most affordable options and easily accessible funding opportunities. Search for and include real, verified scholarship organizations with direct links when possible:
+
+**Search Categories:**
+1. **Field-Specific Scholarships:** Match scholarships to the user's career path interests (STEM, healthcare, business, trades, arts, etc.)
+2. **Demographic-Based Scholarships:** Consider age, gender, ethnicity, military status, first-generation college status, disability status, etc.
+3. **Geographic Scholarships:** Local community foundations, state-specific programs, regional organizations
+4. **Need-Based Scholarships:** Income-qualified programs, Pell grants, state financial aid
+5. **Merit-Based Scholarships:** Academic achievement, skills-based awards
+6. **Employer/Industry Scholarships:** Professional associations, major corporations in relevant fields
+7. **Non-Traditional Student Scholarships:** Adult learners, career changers, returning students
+8. **International Scholarships:** For global learning opportunities when applicable
+
+**Verified Scholarship Organization Types to Include:**
+- National scholarship foundations (e.g., Gates Foundation, Coca-Cola Scholars)
+- Professional association scholarships
+- Corporate scholarship programs
+- Community foundation scholarships
+- State and federal grant programs
+- University-specific scholarships
+- Trade organization scholarships
+- Minority-serving organization scholarships
+- Women's educational foundations
+- Veteran and military family scholarships
+
+**Template:** The output must follow this structure and tone:
+
+Perfect! Based on your responses, here's your personalized learning profile and recommendations:
+
+**🎯 YOUR LEARNING PROFILE ANALYSIS**
+**Who You Are:** [Brief summary of personality, strengths, background, and current situation, using the questionnaire data]
+**Your Advantage:** [Highlight key skills and transferable strengths]
+
+**🎓 YOUR TOP LEARNING PATH MATCHES**
+[List 3–4 career/learning paths that fit the user's profile. For each path:]
+
+**Path Name:**
+- **Perfect For:** [Who this path suits]
+- **Why This Fits:** [Why it matches the user's profile]
+- **Free Courses to Start:** [Include ONLY real, currently available free online courses with exact names and TESTED direct links, plus a link to the main site/platform. CRITICAL: Prioritize courses from the Priority Free Learning Platforms list above, starting with Tier 1 platforms. Only include links you can verify are working and lead directly to the course. For Coursera and edX courses, specify "audit for free" and provide the exact course title and platform name with direct working links only if you can verify the URL. Format as: "Course Title" - Platform Name - [Direct Link] - [Link to main platform] - [brief note about free access method]. Provide enough detail that users can easily find the course through the platform's search function. Do NOT include any links unless you can guarantee they work. If uncertain about specific course links, provide: "Course Title" - Platform Name - [Link to main platform] - [search instructions]. Do NOT suggest generic YouTube searches - only include specific, named courses from reputable educational platforms listed above.]
+
+**💰 SCHOLARSHIP OPPORTUNITIES FOR YOU**
+[Conduct comprehensive search across all categories listed in the Scholarship Search Methodology. List real, specific scholarship opportunities with organization names, brief descriptions, and direct links to application pages when possible. Include both national and location-specific scholarships. CRITICAL: Only include established, verified scholarship organizations with real names and current programs. For each scholarship, provide: Organization Name - Scholarship Program Name - [Direct Link to Application/Info Page] - [Link to Main Organization Website] - Brief eligibility description. If direct application links cannot be verified, provide: Organization Name - Scholarship Program Name - [Link to Main Organization Website] - Search instructions. Include scholarships from multiple categories: field-specific, demographic-based, geographic, need-based, merit-based, employer/industry, non-traditional student, and international when applicable.]
+
+**🗺️ LOCAL TRAINING OPTIONS**
+[Provide real, specific local training options such as named community colleges, trade schools, libraries, workforce development centers, or adult education programs. CRITICAL: Only include verified direct links to actual pages, or link directly to the main institutional website. DO NOT create fake URLs. Include actual institution names and current programs when possible, tailored to the user's location as indicated in the questionnaire. FORMAT: Each institution should be on its own line with a line break between institutions for better readability. Add note: "If any link doesn't work, visit the main website and search for 'continuing education' or 'professional development.'"]
+
+**📝 YOUR ESSAY MATERIAL BANK**
+[Include sample essay themes or prompts based on the user's responses, useful for applications, interviews, or personal reflection]
+
+**🎯 YOUR NEXT STEPS (This Week)**
+[List clear, actionable steps for the user to take immediately]
+
+**💌 ENCOURAGEMENT FOR YOUR JOURNEY**
+[Offer supportive, uplifting advice and motivation]
+
+**Note:** We apologize that some links may be broken or outdated. If any link doesn't work, please use a search engine to search for the name in the description.
+
+**Main Platform Links:**¹
+[Include a footnote section listing all main website URLs for every platform, institution, and organization mentioned in the response, formatted as a simple bulleted list with organization name and main website URL]
+
+**Instructions:**
+- Use plain, accessible language suitable for any age or background.
+- Do not specify any region or state unless it is directly relevant to the user's location as provided in the questionnaire.
+- Always tailor recommendations to the user's unique profile and location.
+- CRITICAL: Only include verified, working links. If you cannot verify a link works, do not include it. For course recommendations, prioritize the Priority Free Learning Platforms list above, starting with Tier 1 completely free platforms. For each course recommendation: 1) Free courses from major platforms with verified links, 2) Exact course titles with search instructions if links cannot be verified, 3) Platform identification with main platform link, 4) Clear free access instructions (audit for free, free tier, completely free, etc.).
+- For scholarship opportunities: Conduct comprehensive search using the Scholarship Search Methodology. Only include verified scholarship organizations with real names and current programs. Provide direct links to application pages when possible, or main organization websites with search instructions.
+- For local training options: Only include verified institutional websites or direct links to continuing education pages. If you cannot verify the link, only include the institution name and main website with link to main platform.
+- Include the note: "If any link doesn't work, visit the main website and search for the relevant terms."
+- Avoid suggesting general searches - provide specific course names and platforms only from the Priority Free Learning Platforms list.
+- Ensure proper formatting with line breaks between local training institutions for better readability.
+- MANDATORY: For all course recommendations, prioritize completely free platforms (Tier 1) first, then free-access platforms (Tier 2-4). Include both the direct course link (if verified) AND a link to the main platform/site.
+- MANDATORY: For scholarship recommendations, search across all categories in the Scholarship Search Methodology to provide the most comprehensive and affordable funding opportunities.
+- MANDATORY: Include the apology note about potentially broken links and instructions to search for names if links don't work.
+- MANDATORY: Include a footnote section with all main platform URLs mentioned in the response.
+- MANDATORY: When recommending courses, explicitly state the free access method for each platform (e.g., "completely free," "audit for free," "free tier available," etc.).`;
+
+document.addEventListener('DOMContentLoaded', () => new QuestionnaireApp());
