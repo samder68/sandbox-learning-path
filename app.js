@@ -332,6 +332,7 @@ class QuestionnaireApp {
     });
 
     document.getElementById('downloadBtn').addEventListener('click', () => this.downloadCombinedFile());
+    document.getElementById('getAiRecommendationsBtn').addEventListener('click', () => this.getRecommendations());
     document.getElementById('resetBtn').addEventListener('click', () => this.resetForm());
   }
 
