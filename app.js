@@ -161,7 +161,7 @@ const questionnaireData = [
       { type: "textarea", text: "What support systems do you have? (family, friends, mentors, communities)", hasTextbox: true, textboxPrompt: "Think about who you can count on for encouragement, advice, or practical help." },
       { type: "radio", text: "How do you typically handle setbacks or failures?", options: ["Push through immediately", "Take time to regroup and plan", "Seek help from others", "Change my approach", "Take a break and revisit later", "Often give up"] },
       { type: "textarea", text: "What skills or knowledge do you feel you're missing to reach your goals?", hasTextbox: true, textboxPrompt: "Think about both technical skills and soft skills." },
-      { type: "rating", text: "How much does fear of failure influence your decisions?", scale: 5, labels: ["No influence", "Major influence"] },
+      { type: "rating", text: "How much does fear of failure influence your decisions?", scale: 5, labels: ["No influence", "Major impact"] },
       { type: "textarea", text: "What would you attempt if you knew you couldn't fail?", hasTextbox: true, textboxPrompt: "This can help identify what fear might be holding you back from." },
       { type: "textarea", text: "What practical steps could you take to address your biggest obstacles?", hasTextbox: true, textboxPrompt: "Think about specific, actionable things you could do to move forward." }
     ]
@@ -434,30 +434,26 @@ class QuestionnaireApp {
       if (loadingSpinner) loadingSpinner.classList.add('hidden');
       
       if (data && data.text) {
-        // Safe, step-by-step formatting
         let text = data.text;
         
-        // 1. Bold text
-        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // FORMATTING ENGINE: Bold, Headers, and Magic Link conversion
+        let formatted = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/🎯/g, '<br>🎯')
+            .replace(/🎓/g, '<br>🎓')
+            .replace(/💰/g, '<br>💰')
+            .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
+            .replace(/\n/g, '<br>');
         
-        // 2. Headers
-        text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-        
-        // 3. Make Links Clickable (handles complex URLs)
-        text = text.replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>');
-        
-        // 4. Line Breaks
-        text = text.replace(/\n/g, '<br>');
-        
-        analysisResults.innerHTML = `<div class="ai-response">${text}</div>`;
+        analysisResults.innerHTML = `<div class="ai-response">${formatted}</div>`;
       } else {
-        analysisResults.innerHTML = "I'm sorry, I couldn't generate recommendations right now. Please try again.";
+        analysisResults.innerHTML = "I couldn't generate the roadmap. Please try again.";
       }
 
     } catch (error) {
       if (loadingSpinner) loadingSpinner.classList.add('hidden');
-      if (analysisResults) analysisResults.innerHTML = '<p>Something went wrong. Please check your internet connection and try again.</p>';
-      console.error('AI Error:', error);
+      analysisResults.innerHTML = `<p>Error: ${error.message}. Check your API connection.</p>`;
     }
   }
 
@@ -472,43 +468,41 @@ class QuestionnaireApp {
   }
 }
 
-// Updated Master Prompt to ensure better link stability
-const outputPromptText = `prompt:
+// THE ENHANCED PROMPT: Career Coach persona with detailed output requirements
+const outputPromptText = `
+**Goal:** Act as a world-class Career Coach. Create a deeply personal, high-detail Career Discovery Profile based on the user's 113-question responses. 
 
-**Goal:** Provide a balanced roadmap of Free training (online) and Formal Education (local/online) based on user data.
+**TONE:** Encouraging, practical, and highly specific. Avoid "antiseptic" or generic advice. 
 
-**CRITICAL LINKING RULE:** 1. Use real, verified platforms only.
-2. If unsure of a direct course URL, provide a search-engine link.
-3. Examples:
-- MIT: https://ocw.mit.edu/search/?q=[Course+Name]
-- Khan Academy: https://www.khanacademy.org/search?page_search_query=[Course+Name]
-- General search for Local Colleges: https://www.google.com/search?q=[College+Name]+[Program+Name]
+**INSTRUCTIONS:**
+1. **Analyze Strengths:** Connect the user's specific past (e.g., retail, delivery) to their technical future.
+2. **Learning Stacks:** For each of the 3 paths, provide a "Learning Stack" with at least 2 specific resources.
+3. **Scholarships & Aid:** Provide a comprehensive list of financial aid options (Pell Grants, WIOA, specific aggregators).
+4. **Search-Logic URLs:** Use real URLs or Search-Logic URLs (e.g., https://www.google.com/search?q=Community+College+IT+Austin).
+5. **Narrative Bank:** Provide specific talking points for interviews that turn "dead-end jobs" into "transferable skill sets."
 
-**SCOPE:**
-- **Free:** MOOCs, OpenCourseWare.
-- **Formal:** Community Colleges, Trade Schools, State Universities (local to user's city).
-- **Online Degrees:** Low-cost options like WGU or SNHU.
+**OUTPUT STRUCTURE:**
+🎯 **YOUR LEARNING PROFILE ANALYSIS**
+[Deep analysis of strengths/advantages]
 
-**OUTPUT TEMPLATE:**
-🎯 **ANALYSIS**
-[Brief summary of fit]
+🎓 **YOUR TOP LEARNING PATH MATCHES**
+[3 Paths, each with a 'Learning Stack' of clickable links]
 
-🎓 **PATHS**
-[Provide 3 paths. Each path must list a specific Free resource and a specific Formal institution/degree.]
+💰 **FINANCIAL AID & SCHOLARSHIPS**
+[Comprehensive list of aid/grants]
 
-💰 **AID & GRANTS**
-[Pell Grants, local state workforce grants, etc.]
+🗺️ **LOCAL TRAINING OPTIONS**
+[Based on user city, search for real institutions]
 
-🗺️ **LOCAL INSTITUTIONS**
-[List 3-4 real institutions in the user's region with search-ready links.]
+📝 **YOUR APPLICATION MATERIAL AND NARRATIVE BANK**
+[Resume objectives & Interview themes]
 
-📝 **CAREER BANK**
-[Resume objectives and narrative themes.]
+🎯 **YOUR NEXT STEPS (THIS WEEK)**
+[Actionable tasks]
 
-🎯 **NEXT STEPS**
-[Specific immediate actions.]`;
+💌 **ENCOURAGEMENT**
+[Personal closing statement]`;
 
-// Global Initialization
 document.addEventListener('DOMContentLoaded', () => {
     new QuestionnaireApp();
 });
