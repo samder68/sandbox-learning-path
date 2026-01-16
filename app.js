@@ -407,7 +407,7 @@ class QuestionnaireApp {
     URL.revokeObjectURL(url);
   }
 
-  async getRecommendations() {
+ async getRecommendations() {
     const resultsSection = document.getElementById('resultsSection');
     const loadingSpinner = document.getElementById('loadingSpinner');
     const analysisResults = document.getElementById('analysisResults');
@@ -435,20 +435,25 @@ class QuestionnaireApp {
       
       const rawText = data.text || "No recommendations received.";
       
-      // Updated Formatting Logic with CLICKABLE LINK support
+      // Improved Formatting Logic
       const formattedText = rawText
         .replace(/### (.*?)(?:\n|$)/g, '<h3>$1</h3>') 
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
-        .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>') // This makes links clickable!
+        // This regex is more robust for finding and converting links
+        .replace(/(https?:\/\/[^\s\)]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
         .replace(/\n/g, '<br>') 
         .replace(/- (.*?)(?:<br>|$)/g, '<li>$1</li>') 
         .replace(/(<li>.*?<\/li>)+/g, '<ul>$&</ul>'); 
       
-      if (analysisResults) analysisResults.innerHTML = `<div class="ai-response">${formattedText}</div>`;
+      if (analysisResults) {
+        analysisResults.innerHTML = `<div class="ai-response">${formattedText}</div>`;
+      }
 
     } catch (error) {
       if (loadingSpinner) loadingSpinner.classList.add('hidden');
-      if (analysisResults) analysisResults.innerHTML = '<p>Something went wrong. Please try again or download your responses instead.</p>';
+      if (analysisResults) {
+        analysisResults.innerHTML = '<p>Something went wrong. The AI couldn\'t generate a plan. Please check your API key or connection.</p>';
+      }
       console.error('AI Error:', error);
     }
   }
@@ -469,9 +474,11 @@ const outputPromptText = `prompt:
 
 **Goal:** Help individuals discover personalized career paths, affordable training, and formal educational programs by evaluating their profile. Provide actionable, location-aware recommendations.
 
-**CRITICAL LINKING RULE:** - Every URL must be a real, clickable link.
-- Prioritize "Search-Logic URLs" for free platforms.
-- Format: [Resource Name] - [Platform/Institution] - [URL]
+**CRITICAL LINKING RULE:** - ONLY provide URLs that you are 100% certain exist.
+- If you are unsure of a direct course link, use a Search-Logic URL instead.
+- Example for MIT: https://ocw.mit.edu/search/?q=[Course+Name]
+- Example for Coursera: https://www.coursera.org/search?query=[Course+Name]
+- Example for Local Colleges: [College Name] - https://www.google.com/search?q=[College+Name]+[Program+Name]
 
 **SCOPE OF RECOMMENDATIONS:**
 You must provide a balanced mix of the following:
