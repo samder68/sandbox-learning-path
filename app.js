@@ -430,8 +430,20 @@ class QuestionnaireApp {
       });
 
       const data = await response.json();
+      
       if (loadingSpinner) loadingSpinner.classList.add('hidden');
-      if (analysisResults) analysisResults.innerHTML = data.text || "No recommendations received.";
+      
+      // Conversion logic to make AI text look good
+      const rawText = data.text || "No recommendations received.";
+      const formattedText = rawText
+        .replace(/### (.*?)(?:\n|$)/g, '<h3>$1</h3>') 
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
+        .replace(/\n/g, '<br>') 
+        .replace(/- (.*?)(?:<br>|$)/g, '<li>$1</li>') 
+        .replace(/(<li>.*?<\/li>)+/g, '<ul>$&</ul>'); 
+      
+      if (analysisResults) analysisResults.innerHTML = `<div class="ai-response">${formattedText}</div>`;
+
     } catch (error) {
       if (loadingSpinner) loadingSpinner.classList.add('hidden');
       if (analysisResults) analysisResults.innerHTML = '<p>Something went wrong. Please try again or download your responses instead.</p>';
