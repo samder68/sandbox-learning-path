@@ -407,7 +407,7 @@ class QuestionnaireApp {
     URL.revokeObjectURL(url);
   }
 
- async getRecommendations() {
+  async getRecommendations() {
     const resultsSection = document.getElementById('resultsSection');
     const loadingSpinner = document.getElementById('loadingSpinner');
     const analysisResults = document.getElementById('analysisResults');
@@ -433,27 +433,30 @@ class QuestionnaireApp {
       
       if (loadingSpinner) loadingSpinner.classList.add('hidden');
       
-      const rawText = data.text || "No recommendations received.";
-      
-      // Improved Formatting Logic
-      const formattedText = rawText
-        .replace(/### (.*?)(?:\n|$)/g, '<h3>$1</h3>') 
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
-        // This regex is more robust for finding and converting links
-        .replace(/(https?:\/\/[^\s\)]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
-        .replace(/\n/g, '<br>') 
-        .replace(/- (.*?)(?:<br>|$)/g, '<li>$1</li>') 
-        .replace(/(<li>.*?<\/li>)+/g, '<ul>$&</ul>'); 
-      
-      if (analysisResults) {
-        analysisResults.innerHTML = `<div class="ai-response">${formattedText}</div>`;
+      if (data && data.text) {
+        // Safe, step-by-step formatting
+        let text = data.text;
+        
+        // 1. Bold text
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // 2. Headers
+        text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        
+        // 3. Make Links Clickable (handles complex URLs)
+        text = text.replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>');
+        
+        // 4. Line Breaks
+        text = text.replace(/\n/g, '<br>');
+        
+        analysisResults.innerHTML = `<div class="ai-response">${text}</div>`;
+      } else {
+        analysisResults.innerHTML = "I'm sorry, I couldn't generate recommendations right now. Please try again.";
       }
 
     } catch (error) {
       if (loadingSpinner) loadingSpinner.classList.add('hidden');
-      if (analysisResults) {
-        analysisResults.innerHTML = '<p>Something went wrong. The AI couldn\'t generate a plan. Please check your API key or connection.</p>';
-      }
+      if (analysisResults) analysisResults.innerHTML = '<p>Something went wrong. Please check your internet connection and try again.</p>';
       console.error('AI Error:', error);
     }
   }
@@ -469,62 +472,41 @@ class QuestionnaireApp {
   }
 }
 
-// Updated Master Prompt to include formal education paths
+// Updated Master Prompt to ensure better link stability
 const outputPromptText = `prompt:
 
-**Goal:** Help individuals discover personalized career paths, affordable training, and formal educational programs by evaluating their profile. Provide actionable, location-aware recommendations.
+**Goal:** Provide a balanced roadmap of Free training (online) and Formal Education (local/online) based on user data.
 
-**CRITICAL LINKING RULE:** - ONLY provide URLs that you are 100% certain exist.
-- If you are unsure of a direct course link, use a Search-Logic URL instead.
-- Example for MIT: https://ocw.mit.edu/search/?q=[Course+Name]
-- Example for Coursera: https://www.coursera.org/search?query=[Course+Name]
-- Example for Local Colleges: [College Name] - https://www.google.com/search?q=[College+Name]+[Program+Name]
+**CRITICAL LINKING RULE:** 1. Use real, verified platforms only.
+2. If unsure of a direct course URL, provide a search-engine link.
+3. Examples:
+- MIT: https://ocw.mit.edu/search/?q=[Course+Name]
+- Khan Academy: https://www.khanacademy.org/search?page_search_query=[Course+Name]
+- General search for Local Colleges: https://www.google.com/search?q=[College+Name]+[Program+Name]
 
-**SCOPE OF RECOMMENDATIONS:**
-You must provide a balanced mix of the following:
-1. **Free Training:** MOOCs (Coursera, edX), MIT OCW, Khan Academy, Google Skillshop.
-2. **Local Community Colleges:** Identify the closest community colleges to the user's city and mention specific relevant Associate Degree or Certificate programs.
-3. **Technical/Trade Schools:** For manual or high-skill trades (HVAC, Welding, IT Bootcamps), suggest local or nationally recognized low-cost options.
-4. **State Universities:** Suggest relevant Bachelor's programs at local state schools, noting if they offer online or hybrid options.
-5. **Online Degree Programs:** Mention reputable, low-cost online institutions like Western Governors University (WGU) or Southern New Hampshire University (SNHU).
-
-**SCHOLARSHIP & AID METHODOLOGY:**
-Connect the user's location and background to:
-- Federal Pell Grants (via FAFSA).
-- State-specific workforce grants (e.g., WIOA).
-- Need-based or demographic-specific scholarships.
+**SCOPE:**
+- **Free:** MOOCs, OpenCourseWare.
+- **Formal:** Community Colleges, Trade Schools, State Universities (local to user's city).
+- **Online Degrees:** Low-cost options like WGU or SNHU.
 
 **OUTPUT TEMPLATE:**
+🎯 **ANALYSIS**
+[Brief summary of fit]
 
-Perfect! Based on your responses, here is your personalized roadmap:
+🎓 **PATHS**
+[Provide 3 paths. Each path must list a specific Free resource and a specific Formal institution/degree.]
 
-🎯 **YOUR CAREER & LEARNING PROFILE**
-[Summary of strengths and goals]
+💰 **AID & GRANTS**
+[Pell Grants, local state workforce grants, etc.]
 
-🎓 **RECOMMENDED LEARNING PATHS (Free to Formal)**
-[Provide 3 distinct paths. For each path, include:]
-**Path Name:**
-- **Why It Fits:** [Rationale]
-- **The "Free Start":** [Free Course Name] - [Platform] - [URL]
-- **The "Formal Step":** [Degree/Certificate] - [Local Institution/Online University] - [URL]
+🗺️ **LOCAL INSTITUTIONS**
+[List 3-4 real institutions in the user's region with search-ready links.]
 
-💰 **FINANCIAL AID, GRANTS & SCHOLARSHIPS**
-- [Local/State Grant Name] - [URL]
-- [Scholarship/Pell Grant info] - [URL]
+📝 **CAREER BANK**
+[Resume objectives and narrative themes.]
 
-🗺️ **LOCAL & REGIONAL INSTITUTIONS**
-[List verified local Community Colleges, Trade Schools, and State Universities based on location.]
-- [Institution Name] - [URL]
-
-📝 **RESUME & NARRATIVE BANK**
-[3-4 high-impact resume objectives and interview themes tailored to the user's background.]
-
-🎯 **ACTION PLAN (THIS WEEK)**
-1. [Action]
-2. [Action]
-
-💌 **ENCOURAGEMENT**
-[Supportive closing statement]`;
+🎯 **NEXT STEPS**
+[Specific immediate actions.]`;
 
 // Global Initialization
 document.addEventListener('DOMContentLoaded', () => {
