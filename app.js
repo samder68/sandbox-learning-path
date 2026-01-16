@@ -407,7 +407,7 @@ class QuestionnaireApp {
     URL.revokeObjectURL(url);
   }
 
-  async getRecommendations() {
+async getRecommendations() {
     const resultsSection = document.getElementById('resultsSection');
     const loadingSpinner = document.getElementById('loadingSpinner');
     const analysisResults = document.getElementById('analysisResults');
@@ -436,10 +436,11 @@ class QuestionnaireApp {
       if (data && data.text) {
         let text = data.text;
         
-        // FORMATTING ENGINE: Bold, Headers, and Magic Link conversion
+        // FORMATTING ENGINE: Bold, Headers, Icons, and Magic Link conversion
         let formatted = text
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/^---/gm, '<hr>')
             .replace(/🎯/g, '<br>🎯')
             .replace(/🎓/g, '<br>🎓')
             .replace(/💰/g, '<br>💰')
