@@ -244,6 +244,7 @@ class QuestionnaireApp {
 
   renderNavigation() {
     const nav = document.getElementById('sectionNav');
+    if (!nav) return;
     nav.innerHTML = questionnaireData.map((section, index) =>
       `<button type="button" class="section-nav-btn ${index === this.currentSection ? 'active' : ''}" data-section="${index}">
         ${index + 1}. ${section.title}
@@ -253,6 +254,7 @@ class QuestionnaireApp {
 
   renderForm() {
     const form = document.getElementById('questionnaire');
+    if (!form) return;
     form.innerHTML = '';
     questionnaireData.forEach((section, sIndex) => {
       const div = document.createElement('div');
@@ -316,29 +318,41 @@ class QuestionnaireApp {
   }
 
   setupEventListeners() {
-    document.getElementById('sectionNav').addEventListener('click', (e) => {
-      if (e.target.dataset.section) this.navigateToSection(parseInt(e.target.dataset.section));
-    });
+    const nav = document.getElementById('sectionNav');
+    if (nav) {
+      nav.addEventListener('click', (e) => {
+        if (e.target.dataset.section) this.navigateToSection(parseInt(e.target.dataset.section));
+      });
+    }
 
-    document.getElementById('questionnaire').addEventListener('input', (e) => {
-      const name = e.target.name;
-      if (e.target.type === 'checkbox') {
-        const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
-        this.responses[name] = checked;
-      } else {
-        this.responses[name] = e.target.value;
-      }
-      this.updateProgress();
-    });
+    const form = document.getElementById('questionnaire');
+    if (form) {
+      form.addEventListener('input', (e) => {
+        const name = e.target.name;
+        if (e.target.type === 'checkbox') {
+          const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+          this.responses[name] = checked;
+        } else {
+          this.responses[name] = e.target.value;
+        }
+        this.updateProgress();
+      });
+    }
 
-    document.getElementById('downloadBtn').addEventListener('click', () => this.downloadCombinedFile());
-    document.getElementById('getAiRecommendationsBtn').addEventListener('click', () => this.getRecommendations());
-    document.getElementById('resetBtn').addEventListener('click', () => this.resetForm());
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) downloadBtn.addEventListener('click', () => this.downloadCombinedFile());
+
+    const aiBtn = document.getElementById('getAiRecommendationsBtn');
+    if (aiBtn) aiBtn.addEventListener('click', () => this.getRecommendations());
+
+    const resetBtn = document.getElementById('resetBtn');
+    if (resetBtn) resetBtn.addEventListener('click', () => this.resetForm());
   }
 
   navigateToSection(idx) {
     this.currentSection = idx;
-    document.getElementById(`section-${idx}`).scrollIntoView({ behavior: 'smooth' });
+    const target = document.getElementById(`section-${idx}`);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
     document.querySelectorAll('.section-nav-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
   }
 
@@ -392,9 +406,51 @@ class QuestionnaireApp {
     a.click();
     URL.revokeObjectURL(url);
   }
+
+  async getRecommendations() {
+    const resultsSection = document.getElementById('resultsSection');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const analysisResults = document.getElementById('analysisResults');
+
+    if (resultsSection) resultsSection.classList.remove('hidden');
+    if (loadingSpinner) loadingSpinner.classList.remove('hidden');
+    if (analysisResults) analysisResults.innerHTML = ''; 
+    if (resultsSection) resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+    const formattedData = this.prepareDataForAi();
+
+    try {
+      const response = await fetch('/api/generate-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          profile: formattedData,
+          prompt: outputPromptText 
+        })
+      });
+
+      const data = await response.json();
+      if (loadingSpinner) loadingSpinner.classList.add('hidden');
+      if (analysisResults) analysisResults.innerHTML = data.text || "No recommendations received.";
+    } catch (error) {
+      if (loadingSpinner) loadingSpinner.classList.add('hidden');
+      if (analysisResults) analysisResults.innerHTML = '<p>Something went wrong. Please try again or download your responses instead.</p>';
+      console.error('AI Error:', error);
+    }
+  }
+
+  prepareDataForAi() {
+    let summary = "USER RESPONSES:\n";
+    for (const [key, value] of Object.entries(this.responses)) {
+      if (value && value.length > 0) {
+        summary += `${key}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+      }
+    }
+    return summary;
+  }
 }
 
-// Master prompt from outputprompt.txt 
+// Master prompt definition
 const outputPromptText = `prompt:
 
 **Goal:** Help individuals discover personalized career paths and affordable training by evaluating their profile. Provide actionable, location-aware recommendations.
@@ -462,52 +518,7 @@ Perfect! Based on your responses, here is your personalized learning profile:
 **Main Platform Directory:**
 [Footnote list of all root URLs used above]`;
 
-    async getRecommendations() {
-        const resultsSection = document.getElementById('resultsSection');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const analysisResults = document.getElementById('analysisResults');
-
-        // 1. Show the results area and the loading spinner
-        resultsSection.classList.remove('hidden');
-        loadingSpinner.classList.remove('hidden');
-        analysisResults.innerHTML = ''; 
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
-
-        // 2. Package the 113 questions for the AI
-        const formattedData = this.prepareDataForAi();
-
-        try {
-            // 3. Call your Vercel API
-            const response = await fetch('/api/generate-plan', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    profile: formattedData,
-                    prompt: outputPromptText 
-                })
-            });
-
-            const data = await response.json();
-
-            // 4. Show the AI's response and hide the spinner
-            loadingSpinner.classList.add('hidden');
-            analysisResults.innerHTML = data.text;
-        } catch (error) {
-            loadingSpinner.classList.add('hidden');
-            analysisResults.innerHTML = '<p>Something went wrong. Please try again or download your responses instead.</p>';
-            console.error('AI Error:', error);
-        }
-    }
-
-    prepareDataForAi() {
-        let summary = "USER RESPONSES:\n";
-        for (const [key, value] of Object.entries(this.responses)) {
-            if (value && value.length > 0) {
-                summary += `${key}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
-            }
-        }
-        return summary;
-    }
-} // This bracket correctly closes the QuestionnaireApp class
-
-document.addEventListener('DOMContentLoaded', () => new QuestionnaireApp());
+// Global Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    new QuestionnaireApp();
+});
