@@ -462,4 +462,52 @@ Perfect! Based on your responses, here is your personalized learning profile:
 **Main Platform Directory:**
 [Footnote list of all root URLs used above]`;
 
+    async getRecommendations() {
+        const resultsSection = document.getElementById('resultsSection');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const analysisResults = document.getElementById('analysisResults');
+
+        // 1. Show the results area and the loading spinner
+        resultsSection.classList.remove('hidden');
+        loadingSpinner.classList.remove('hidden');
+        analysisResults.innerHTML = ''; 
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+        // 2. Package the 113 questions for the AI
+        const formattedData = this.prepareDataForAi();
+
+        try {
+            // 3. Call your Vercel API
+            const response = await fetch('/api/generate-plan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    profile: formattedData,
+                    prompt: outputPromptText 
+                })
+            });
+
+            const data = await response.json();
+
+            // 4. Show the AI's response and hide the spinner
+            loadingSpinner.classList.add('hidden');
+            analysisResults.innerHTML = data.text;
+        } catch (error) {
+            loadingSpinner.classList.add('hidden');
+            analysisResults.innerHTML = '<p>Something went wrong. Please try again or download your responses instead.</p>';
+            console.error('AI Error:', error);
+        }
+    }
+
+    prepareDataForAi() {
+        let summary = "USER RESPONSES:\n";
+        for (const [key, value] of Object.entries(this.responses)) {
+            if (value && value.length > 0) {
+                summary += `${key}: ${Array.isArray(value) ? value.join(', ') : value}\n`;
+            }
+        }
+        return summary;
+    }
+} // This bracket correctly closes the QuestionnaireApp class
+
 document.addEventListener('DOMContentLoaded', () => new QuestionnaireApp());
