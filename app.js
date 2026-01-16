@@ -433,11 +433,13 @@ class QuestionnaireApp {
       
       if (loadingSpinner) loadingSpinner.classList.add('hidden');
       
-      // Conversion logic to make AI text look good
       const rawText = data.text || "No recommendations received.";
+      
+      // Updated Formatting Logic with CLICKABLE LINK support
       const formattedText = rawText
         .replace(/### (.*?)(?:\n|$)/g, '<h3>$1</h3>') 
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
+        .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>') // This makes links clickable!
         .replace(/\n/g, '<br>') 
         .replace(/- (.*?)(?:<br>|$)/g, '<li>$1</li>') 
         .replace(/(<li>.*?<\/li>)+/g, '<ul>$&</ul>'); 
@@ -462,73 +464,60 @@ class QuestionnaireApp {
   }
 }
 
-// Master prompt definition
+// Updated Master Prompt to include formal education paths
 const outputPromptText = `prompt:
 
-**Goal:** Help individuals discover personalized career paths and affordable training by evaluating their profile. Provide actionable, location-aware recommendations.
+**Goal:** Help individuals discover personalized career paths, affordable training, and formal educational programs by evaluating their profile. Provide actionable, location-aware recommendations.
 
-**CRITICAL LINKING RULE:** To prevent broken links, prioritize "Search-Logic URLs." 
-- If a direct link is used, follow it with a Google Search fallback.
-- Format: [Course Name] - [Platform] - [Link] | [Search Fallback]
+**CRITICAL LINKING RULE:** - Every URL must be a real, clickable link.
+- Prioritize "Search-Logic URLs" for free platforms.
+- Format: [Resource Name] - [Platform/Institution] - [URL]
 
-**PRIORITY PLATFORMS (Search-Logic Enabled):**
-1. MIT OpenCourseWare: https://ocw.mit.edu/search/?q=[Course+Name]
-2. Khan Academy: https://www.khanacademy.org/search?page_search_query=[Course+Name]
-3. Coursera (Audit): https://www.coursera.org/search?query=[Course+Name]
-4. edX (Audit): https://www.edx.org/search?q=[Course+Name]
-5. Google Skillshop: https://skillshop.exceedlms.com/student/catalog/list?q=[Course+Name]
+**SCOPE OF RECOMMENDATIONS:**
+You must provide a balanced mix of the following:
+1. **Free Training:** MOOCs (Coursera, edX), MIT OCW, Khan Academy, Google Skillshop.
+2. **Local Community Colleges:** Identify the closest community colleges to the user's city and mention specific relevant Associate Degree or Certificate programs.
+3. **Technical/Trade Schools:** For manual or high-skill trades (HVAC, Welding, IT Bootcamps), suggest local or nationally recognized low-cost options.
+4. **State Universities:** Suggest relevant Bachelor's programs at local state schools, noting if they offer online or hybrid options.
+5. **Online Degree Programs:** Mention reputable, low-cost online institutions like Western Governors University (WGU) or Southern New Hampshire University (SNHU).
 
-**SCHOLARSHIP SEARCH METHODOLOGY:**
-Search across Field-Specific, Demographic, and Geographic categories. 
-MANDATORY: Use verified aggregators for stability:
-- CareerOneStop (Dept. of Labor): https://www.careeronestop.org/Toolkit/Training/find-scholarships.aspx
-- Fastweb: https://www.fastweb.com
-- Scholarships.com: https://www.scholarships.com
-- Federal Pell Grants: https://studentaid.gov/understand-aid/types/grants/pell
+**SCHOLARSHIP & AID METHODOLOGY:**
+Connect the user's location and background to:
+- Federal Pell Grants (via FAFSA).
+- State-specific workforce grants (e.g., WIOA).
+- Need-based or demographic-specific scholarships.
 
 **OUTPUT TEMPLATE:**
 
-Perfect! Based on your responses, here is your personalized learning profile:
+Perfect! Based on your responses, here is your personalized roadmap:
 
-🎯 **YOUR LEARNING PROFILE ANALYSIS**
-**Who You Are:** [Brief summary of strengths and situation]
-**Your Advantage:** [Highlight transferable skills]
+🎯 **YOUR CAREER & LEARNING PROFILE**
+[Summary of strengths and goals]
 
-🎓 **YOUR TOP LEARNING PATH MATCHES**
-[Provide 3 matches. For each:]
+🎓 **RECOMMENDED LEARNING PATHS (Free to Formal)**
+[Provide 3 distinct paths. For each path, include:]
 **Path Name:**
-- **Why This Fits:** [Rationale based on user data]
-- **Learning Stack (Free):**
-  1. [Course Name] - [Platform] - [Search-Logic URL]
-     - *Access:* (e.g., "Select 'Audit' to learn for free")
-  2. [Course Name] - [Platform] - [Search-Logic URL]
+- **Why It Fits:** [Rationale]
+- **The "Free Start":** [Free Course Name] - [Platform] - [URL]
+- **The "Formal Step":** [Degree/Certificate] - [Local Institution/Online University] - [URL]
 
-💰 **FINANCIAL AID & SCHOLARSHIPS**
-- [Scholarship Name/Org] - [Direct Link or Main Site]
-- [Local Grant/WIOA Link] - [Direct Link or Main Site]
-- *Tip:* [Brief advice on application difficulty or deadlines]
+💰 **FINANCIAL AID, GRANTS & SCHOLARSHIPS**
+- [Local/State Grant Name] - [URL]
+- [Scholarship/Pell Grant info] - [URL]
 
-🗺️ **LOCAL TRAINING OPTIONS**
-[Based on user location, list verified institutions:]
-- [Institution Name] - [Main Website URL]
-- *Note:* If a link is outdated, search the site for "Continuing Education."
+🗺️ **LOCAL & REGIONAL INSTITUTIONS**
+[List verified local Community Colleges, Trade Schools, and State Universities based on location.]
+- [Institution Name] - [URL]
 
-📝 **YOUR APPLICATION MATERIAL AND NARRATIVE BANK**
-**Resume Objectives:**
-- [Draft 3-4 specific, high-impact resume objective statements tailored to the new career path using the user's existing strengths]
+📝 **RESUME & NARRATIVE BANK**
+[3-4 high-impact resume objectives and interview themes tailored to the user's background.]
 
-**Application Essay & Interview Themes:**
-- [Provide 3-4 deep narrative themes or prompts. Explain how the user can bridge their past experiences (e.g., retail, delivery) to their new goals (e.g., IT, Green Tech)]
-
-🎯 **YOUR NEXT STEPS (THIS WEEK)**
-1. [Specific action]
-2. [Specific action]
+🎯 **ACTION PLAN (THIS WEEK)**
+1. [Action]
+2. [Action]
 
 💌 **ENCOURAGEMENT**
-[Supportive closing statement]
-
-**Main Platform Directory:**
-[Footnote list of all root URLs used above]`;
+[Supportive closing statement]`;
 
 // Global Initialization
 document.addEventListener('DOMContentLoaded', () => {
