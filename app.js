@@ -184,45 +184,54 @@ class QuestionnaireApp {
         if (pt) pt.innerText = pct + '% Complete';
     }
 
-    async getRecommendations() {
-        const results = document.getElementById('resultsSection');
-        const spinner = document.getElementById('loadingSpinner');
-        const analysis = document.getElementById('analysisResults');
+async getRecommendations() {
+    const resultsSection = document.getElementById('resultsSection');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const analysisResults = document.getElementById('analysisResults');
 
-        results.classList.remove('hidden');
-        spinner.classList.remove('hidden');
-        analysis.innerHTML = '';
-        results.scrollIntoView({ behavior: 'smooth' });
+    // 1. Reveal the section and show spinner
+    resultsSection.classList.remove('hidden');
+    loadingSpinner.classList.remove('hidden');
+    analysisResults.innerHTML = ''; // Clear previous results
+    resultsSection.scrollIntoView({ behavior: 'smooth' });
 
-        try {
-            const response = await fetch('/api/generate-plan', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    profile: JSON.stringify(this.responses), 
-                    prompt: "Act as a Career Strategist. Analyze the user's archetypes from gaming, media, and learning styles. Provide 3 paths, 3 free resources, and tailored NJ-based aid." 
-                })
-            });
+    try {
+        // 2. The Fetch Request
+        const response = await fetch('/api/generate-plan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                profile: JSON.stringify(this.responses), 
+                prompt: "Act as a Career Strategist. Provide 3 paths, 3 free resources, and NJ aid." 
+            })
+        });
 
-            const data = await response.json();
-            spinner.classList.add('hidden');
+        if (!response.ok) throw new Error(`Server Error: ${response.status}`);
+
+        const data = await response.json();
+        
+        // 3. Hide spinner and show results
+        loadingSpinner.classList.add('hidden');
+        
+        if (data && data.text) {
+            let formatted = data.text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/🎯/g, '<br>🎯').replace(/🎓/g, '<br>🎓').replace(/💰/g, '<br>💰')
+                .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
+                .replace(/\n/g, '<br>');
             
-            if (data && data.text) {
-                // FORMATTING ENGINE
-                let formatted = data.text
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-                    .replace(/🎯/g, '<br>🎯').replace(/🎓/g, '<br>🎓').replace(/💰/g, '<br>💰')
-                    .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
-                    .replace(/\n/g, '<br>');
-                
-                analysis.innerHTML = `<div class="ai-response-container">${formatted}</div>`;
-            }
-        } catch (error) {
-            spinner.classList.add('hidden');
-            analysis.innerHTML = `<p style="color:red">Connection Error: ${error.message}</p>`;
+            analysisResults.innerHTML = `<div class="ai-response-container">${formatted}</div>`;
+        } else {
+            analysisResults.innerHTML = "The AI returned an empty response. Check your API key.";
         }
+
+    } catch (error) {
+        // 4. Critical Error Handling
+        loadingSpinner.classList.add('hidden');
+        analysisResults.innerHTML = `<p style="color:red; padding: 20px;"><strong>Error:</strong> ${error.message}<br><br>Check your Vercel logs or ensure your OpenAI API key is set.</p>`;
     }
+}
 
     downloadData() {
         const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(this.responses, null, 2));
