@@ -34,7 +34,6 @@ class QuestionnaireApp {
         const form = document.getElementById('questionnaire');
         if (!form) return;
         
-        // Render all questions at once for a better UI flow
         form.innerHTML = questionnaireData.map(section => `
             <div class="section-container" style="margin-bottom: 40px; padding: 20px; border-bottom: 1px solid #eee;">
                 <h2 style="color: #2d3748; margin-bottom: 20px;">${section.title}</h2>
@@ -42,26 +41,32 @@ class QuestionnaireApp {
             </div>
         `).join('');
 
+        this.setupEventListeners();
+        this.updateProgress();
+
         document.getElementById('getAiRecommendationsBtn').onclick = () => this.getRecommendations();
-        document.getElementById('resetBtn').onclick = () => { localStorage.clear(); location.reload(); };
+        document.getElementById('resetBtn').onclick = () => { 
+            localStorage.clear(); 
+            location.reload(); 
+        };
     }
 
     renderQuestion(q) {
         const val = this.responses[q.id] || '';
         if (q.type === 'checkbox') {
-            return `<div class="question"><p><strong>${q.text}</strong></p>
-                ${q.options.map(opt => `<label><input type="checkbox" name="${q.id}" value="${opt}" ${(this.responses[q.id] || []).includes(opt) ? 'checked' : ''}> ${opt}</label><br>`).join('')}
+            return `<div class="question" style="margin-bottom:20px;"><p><strong>${q.text}</strong></p>
+                ${q.options.map(opt => `<label style="display:block;"><input type="checkbox" name="${q.id}" value="${opt}" ${(this.responses[q.id] || []).includes(opt) ? 'checked' : ''}> ${opt}</label>`).join('')}
             </div>`;
         }
         if (q.type === 'text') {
-            return `<div class="question"><p><strong>${q.text}</strong></p><input type="text" name="${q.id}" value="${val}" class="form-control"></div>`;
+            return `<div class="question" style="margin-bottom:20px;"><p><strong>${q.text}</strong></p><input type="text" name="${q.id}" value="${val}" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"></div>`;
         }
-        return `<div class="question"><p><strong>${q.text}</strong></p><textarea name="${q.id}" class="form-control" rows="4">${val}</textarea></div>`;
+        return `<div class="question" style="margin-bottom:20px;"><p><strong>${q.text}</strong></p><textarea name="${q.id}" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;" rows="4">${val}</textarea></div>`;
     }
 
     setupEventListeners() {
         document.getElementById('questionnaire').oninput = (e) => {
-            const { name, type, value, checked } = e.target;
+            const { name, type, value } = e.target;
             if (type === 'checkbox') {
                 const vals = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
                 this.responses[name] = vals;
@@ -69,7 +74,18 @@ class QuestionnaireApp {
                 this.responses[name] = value;
             }
             localStorage.setItem('user_responses', JSON.stringify(this.responses));
+            this.updateProgress();
         };
+    }
+
+    updateProgress() {
+        const total = 8; // approx number of questions
+        const answered = Object.keys(this.responses).length;
+        const pct = Math.min(Math.round((answered / total) * 100), 100);
+        const pb = document.getElementById('progressBar');
+        const pt = document.getElementById('progressText');
+        if (pb) pb.style.width = pct + '%';
+        if (pt) pt.innerText = pct + '% Complete';
     }
 
     async getRecommendations() {
@@ -78,25 +94,12 @@ class QuestionnaireApp {
         results.innerHTML = '';
         spinner.classList.remove('hidden');
 
-        const prompt = `Act as an Elite Career Architect. You MUST use these exact headers and provide a deeply tailored 1,000-word brief.
-        
+        const prompt = `Act as an Elite Career Architect. You MUST use these exact headers and provide a deeply tailored 1,000-word brief. 
         # YOUR PERSONALIZED CAREER DISCOVERY PROFILE
         ## 🎯 YOUR LEARNING PROFILE ANALYSIS
-        Connect their experience (${this.responses.experience}) and their 'effortless win' (${this.responses.effortless_win}) to their advantage.
-        
-        ---
         ## 🎓 YOUR TOP LEARNING PATH MATCHES
-        Provide 3 specific paths with real search links to Coursera, edX, and Khan Academy.
-        
-        ---
         ## 💰 FINANCIAL AID & SCHOLARSHIPS
-        Include Pell Grant, WIOA, and the NJ Community College Opportunity Grant.
-        
-        ---
         ## 📝 YOUR APPLICATION MATERIAL AND NARRATIVE BANK
-        Tailored Objective: [Write a professional objective using their specific background]
-        The Bridge: [Write a story connecting their win to their new career]
-        
         USER DATA: ${JSON.stringify(this.responses)}`;
 
         try {
@@ -108,19 +111,21 @@ class QuestionnaireApp {
             const data = await res.json();
             spinner.classList.add('hidden');
             
-            // CLEAN RENDERING ENGINE
-            results.innerHTML = `<div class="elite-report">${data.text
-                .replace(/\n/g, '<br>')
-                .replace(/---/g, '<hr style="margin: 40px 0;">')
-                .replace(/^# (.*$)/gim, '<h1 style="color:#1a202c; font-size: 2.5rem; border-bottom: 4px solid #3182ce; padding-bottom: 10px;">$1</h1>')
-                .replace(/^## (.*$)/gim, '<h2 style="color:#2d3748; font-size: 1.8rem; margin-top: 40px; background: #f7fafc; padding: 10px;">$1</h2>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #3182ce; font-weight: bold;">$1</a>')}</div>`;
+            // This is the CRITICAL renderer that makes it "Elite"
+            results.innerHTML = `
+                <div style="background: white; padding: 40px; line-height: 1.8; color: #333; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 8px;">
+                    ${data.text
+                        .replace(/^# (.*$)/gim, '<h1 style="color:#1a365d; border-bottom: 3px solid #3182ce; padding-bottom: 10px; font-size: 2.2em;">$1</h1>')
+                        .replace(/^## (.*$)/gim, '<h2 style="color:#2c5282; background:#ebf8ff; padding: 10px; margin-top: 30px; font-size: 1.6em;">$1</h2>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#2d3748;">$1</strong>')
+                        .replace(/---/g, '<hr style="border:0; border-top:1px solid #e2e8f0; margin: 40px 0;">')
+                        .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #3182ce; font-weight: bold; text-decoration: underline;">$1</a>')
+                        .replace(/\n/g, '<br>')}
+                </div>`;
         } catch (e) {
             spinner.classList.add('hidden');
             results.innerHTML = "Error: " + e.message;
         }
     }
 }
-window.app = new QuestionnaireApp();
-app.setupEventListeners();
+const app = new QuestionnaireApp();
