@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Comprehensive Learning Path Discovery Questionnaire</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-<div class="dashboard-container">
-    <header class="main-header">
-        <h1>Career Discovery Engine <span class="beta-tag">BETA</span></h1>
-        <p>A deep-dive diagnostic for those serious about their next chapter.</p>
-    </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Discovery Engine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="main-header">
+            <h1>Career Discovery Engine <span class="beta-tag">BETA</span></h1>
+            <p>A deep-dive diagnostic for those serious about their next chapter.</p>
+        </header>
 
-    <div class="progress-container">
-        <div id="progressText">0% Complete</div>
-        <div class="progress-bar-bg">
-            <div id="progressBar" style="width: 0%;"></div>
+        <div class="progress-container">
+            <div id="progressText">0% Complete</div>
+            <div class="progress-bar-bg">
+                <div id="progressBar" style="width: 0%;"></div>
+            </div>
         </div>
+
+        <div class="module-grid" id="sectionNav"></div>
+
+        <main class="content-area">
+            <form id="questionnaire">
+                </form>
+            
+            <div class="action-buttons">
+                <button id="getAiRecommendationsBtn" class="btn-primary">Generate My Career Brief</button>
+                <button id="downloadBtn" class="btn-secondary">Download Data (.txt)</button>
+                <button id="resetBtn" class="btn-danger">Hard Reset</button>
+            </div>
+        </main>
+
+        <section id="resultsSection" class="hidden">
+            <div id="loadingSpinner" class="hidden">
+                <div class="spinner"></div>
+                <p>Analyzing your archetypes and searching for affordable paths...</p>
+            </div>
+            <div id="analysisResults" class="ai-response-container"></div>
+        </section>
     </div>
-
-    <div class="module-grid" id="sectionNav">
-        </div>
-
-    <main class="content-area">
-        <form id="questionnaire">
-            </form>
-        
-        <div class="action-buttons">
-            <button id="getAiRecommendationsBtn" class="btn-primary">Generate My Career Brief</button>
-            <button id="downloadBtn" class="btn-secondary">Download Data (.txt)</button>
-            <button id="resetBtn" class="btn-danger">Hard Reset</button>
-        </div>
-    </main>
-
-    <section id="resultsSection" class="hidden">
-        <div id="loadingSpinner" class="hidden">
-            <div class="spinner"></div>
-            <p>Analyzing your archetypes and searching for affordable paths...</p>
-        </div>
-        <div id="analysisResults" class="ai-response-container"></div>
-    </section>
-</div>
+    <script src="app.js"></script>
+</body>
 </html>
