@@ -136,30 +136,34 @@ class QuestionnaireApp {
     const loadingSpinner = document.getElementById('loadingSpinner');
     const analysisResults = document.getElementById('analysisResults');
 
+    // Reset view
     resultsSection.classList.remove('hidden');
     loadingSpinner.classList.remove('hidden');
     analysisResults.innerHTML = ''; 
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
-
-    // Pack up all the data from your 6 modules
-    const profileData = JSON.stringify(this.responses);
+    
+    // Set a 15-second "Safety Timer" so it doesn't spin forever
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     try {
       const response = await fetch('/api/generate-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: profileData, prompt: outputPromptText })
+        body: JSON.stringify({ 
+          profile: JSON.stringify(this.responses), 
+          prompt: outputPromptText 
+        }),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
       const data = await response.json();
       loadingSpinner.classList.add('hidden');
       
       if (data && data.text) {
-        // FORMATTING ENGINE: Turns raw AI text into your professional Dashboard results
         let formatted = data.text
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-            .replace(/^---/gm, '<hr>')
             .replace(/🎯/g, '<br>🎯').replace(/🎓/g, '<br>🎓').replace(/💰/g, '<br>💰')
             .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
             .replace(/\n/g, '<br>');
@@ -167,8 +171,9 @@ class QuestionnaireApp {
         analysisResults.innerHTML = `<div class="ai-response-container">${formatted}</div>`;
       }
     } catch (error) {
+      clearTimeout(timeoutId);
       loadingSpinner.classList.add('hidden');
-      analysisResults.innerHTML = `<p>Connection Error: ${error.message}. Ensure your Vercel project is deployed.</p>`;
+      analysisResults.innerHTML = `<p style="color:red">Error: ${error.name === 'AbortError' ? 'Request timed out. Check your internet or API.' : error.message}</p>`;
     }
   }
 
