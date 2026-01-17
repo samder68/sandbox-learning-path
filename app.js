@@ -1,32 +1,25 @@
 const questionnaireData = [
     {
-        title: "The Core",
+        title: "Your Background",
         questions: [
-            { type: "text", text: "City & State?", id: "user-location" },
-            { type: "radio", text: "Current Life Stage?", options: ["High School", "Early Career (under 25)", "Mid-Career Pivot", "Military/Service Transition"] },
-            { type: "radio", text: "Current Income?", options: ["Under $25k", "$25k-$45k", "$45k+"] },
-            { type: "checkbox", text: "Language Skills?", options: ["English", "Spanish", "Portuguese", "Other"] }
+            { type: "text", text: "City & State?", id: "location" },
+            { type: "textarea", text: "Describe your current or most recent work experience in detail.", id: "experience" },
+            { type: "textarea", text: "What technical or mechanical things have you fixed for friends or family?", id: "tech_fixes" },
+            { type: "checkbox", text: "Languages you speak fluently?", options: ["English", "Spanish", "Portuguese", "Other"] }
         ]
     },
     {
-        title: "The Arena",
+        title: "Your Wiring",
         questions: [
-            { type: "checkbox", text: "Gaming/Problem-Solving Style?", options: ["Tactical/Strategy", "Fast-paced/Reflex", "Explorer", "Social/Team-based"] },
-            { type: "textarea", text: "Describe a 'win' that felt effortless to you (gaming or real life).", id: "effortless-win" }
+            { type: "textarea", text: "Describe a 'win' that felt effortless to you (gaming or real life).", id: "effortless_win" },
+            { type: "checkbox", text: "Gaming/Problem-Solving Style?", options: ["Tactical/Strategy", "Fast-paced/Reflex", "Explorer", "Social/Team-based"] }
         ]
     },
     {
-        title: "The Workshop",
+        title: "The Goal",
         questions: [
-            { type: "textarea", text: "What hands-on tech/mechanical things have you fixed for family? (Be specific)", id: "hands-on-experience" },
-            { type: "textarea", text: "What was your most recent job title and what did you do there?", id: "past-job" }
-        ]
-    },
-    {
-        title: "The Horizon",
-        questions: [
-            { type: "text", text: "Target Salary Floor? (e.g. $75k)", id: "income-goal" },
-            { type: "checkbox", text: "Work Priorities?", options: ["Remote", "Predictability", "Hands-on", "Community Impact"] }
+            { type: "text", text: "Target Salary Floor? (e.g. $85k)", id: "salary" },
+            { type: "textarea", text: "If money wasn't an issue, what would you spend your days building or doing?", id: "passion" }
         ]
     }
 ];
@@ -34,74 +27,49 @@ const questionnaireData = [
 class QuestionnaireApp {
     constructor() {
         this.responses = JSON.parse(localStorage.getItem('user_responses')) || {};
-        this.currentSection = 0;
         this.init();
     }
 
     init() {
-        this.renderNavigation();
-        this.renderForm();
-        this.setupEventListeners();
-        this.updateProgress();
-    }
-
-    renderNavigation() {
-        const nav = document.getElementById('sectionNav');
-        if (nav) {
-            nav.innerHTML = questionnaireData.map((s, i) => `
-                <div class="section-nav-btn ${i === this.currentSection ? 'active' : ''}" onclick="app.navigateToSection(${i})">
-                    <strong>${s.title}</strong>
-                </div>
-            `).join('');
-        }
-    }
-
-    renderForm() {
         const form = document.getElementById('questionnaire');
         if (!form) return;
-        const section = questionnaireData[this.currentSection];
-        form.innerHTML = `<h2>${section.title}</h2>` + section.questions.map((q, i) => {
-            const qId = q.id || `q_${this.currentSection}_${i}`;
-            const val = this.responses[qId] || '';
-            if (q.type === 'radio') {
-                return `<div class="question"><p>${q.text}</p>${q.options.map(opt => `<label><input type="radio" name="${qId}" value="${opt}" ${val === opt ? 'checked' : ''}> ${opt}</label>`).join('')}</div>`;
-            }
-            if (q.type === 'checkbox') {
-                const vals = Array.isArray(val) ? val : [];
-                return `<div class="question"><p>${q.text}</p>${q.options.map(opt => `<label><input type="checkbox" name="${qId}" value="${opt}" ${vals.includes(opt) ? 'checked' : ''}> ${opt}</label>`).join('')}</div>`;
-            }
-            return `<div class="question"><p>${q.text}</p><textarea name="${qId}" class="form-control">${val}</textarea></div>`;
-        }).join('');
+        
+        // Render all questions at once for a better UI flow
+        form.innerHTML = questionnaireData.map(section => `
+            <div class="section-container" style="margin-bottom: 40px; padding: 20px; border-bottom: 1px solid #eee;">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">${section.title}</h2>
+                ${section.questions.map(q => this.renderQuestion(q)).join('')}
+            </div>
+        `).join('');
+
+        document.getElementById('getAiRecommendationsBtn').onclick = () => this.getRecommendations();
+        document.getElementById('resetBtn').onclick = () => { localStorage.clear(); location.reload(); };
     }
 
-    navigateToSection(i) {
-        this.currentSection = i;
-        this.renderNavigation();
-        this.renderForm();
+    renderQuestion(q) {
+        const val = this.responses[q.id] || '';
+        if (q.type === 'checkbox') {
+            return `<div class="question"><p><strong>${q.text}</strong></p>
+                ${q.options.map(opt => `<label><input type="checkbox" name="${q.id}" value="${opt}" ${(this.responses[q.id] || []).includes(opt) ? 'checked' : ''}> ${opt}</label><br>`).join('')}
+            </div>`;
+        }
+        if (q.type === 'text') {
+            return `<div class="question"><p><strong>${q.text}</strong></p><input type="text" name="${q.id}" value="${val}" class="form-control"></div>`;
+        }
+        return `<div class="question"><p><strong>${q.text}</strong></p><textarea name="${q.id}" class="form-control" rows="4">${val}</textarea></div>`;
     }
 
     setupEventListeners() {
-        const form = document.getElementById('questionnaire');
-        form.oninput = (e) => {
-            const name = e.target.name;
-            if (e.target.type === 'checkbox') {
-                this.responses[name] = Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+        document.getElementById('questionnaire').oninput = (e) => {
+            const { name, type, value, checked } = e.target;
+            if (type === 'checkbox') {
+                const vals = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(c => c.value);
+                this.responses[name] = vals;
             } else {
-                this.responses[name] = e.target.value;
+                this.responses[name] = value;
             }
             localStorage.setItem('user_responses', JSON.stringify(this.responses));
-            this.updateProgress();
         };
-
-        document.getElementById('getAiRecommendationsBtn').onclick = () => this.getRecommendations();
-    }
-
-    updateProgress() {
-        const total = 10; // Total questions
-        const answered = Object.keys(this.responses).length;
-        const pct = Math.min(Math.round((answered / total) * 100), 100);
-        document.getElementById('progressBar').style.width = pct + '%';
-        document.getElementById('progressText').innerText = pct + '% Complete';
     }
 
     async getRecommendations() {
@@ -110,18 +78,26 @@ class QuestionnaireApp {
         results.innerHTML = '';
         spinner.classList.remove('hidden');
 
-        const prompt = `Act as an Elite Career Architect. Use these EXACT user details: ${JSON.stringify(this.responses)}.
-        REQUIRED FORMAT:
+        const prompt = `Act as an Elite Career Architect. You MUST use these exact headers and provide a deeply tailored 1,000-word brief.
+        
         # YOUR PERSONALIZED CAREER DISCOVERY PROFILE
-        ## 🎯 ANALYSIS
-        **Advantage:** [Analyze their specific 'effortless-win' and 'hands-on-experience' fields]
+        ## 🎯 YOUR LEARNING PROFILE ANALYSIS
+        Connect their experience (${this.responses.experience}) and their 'effortless win' (${this.responses.effortless_win}) to their advantage.
+        
         ---
-        ## 🎓 PATHS
-        [Provide 3 paths with real links to Coursera, edX, or Khan Academy search pages]
+        ## 🎓 YOUR TOP LEARNING PATH MATCHES
+        Provide 3 specific paths with real search links to Coursera, edX, and Khan Academy.
+        
         ---
-        ## 📝 NARRATIVE BANK
-        **Tailored Objective:** [Write a resume objective using their 'past-job' title]
-        **The Bridge:** [A specific interview story connecting their 'effortless-win' to their new path]`;
+        ## 💰 FINANCIAL AID & SCHOLARSHIPS
+        Include Pell Grant, WIOA, and the NJ Community College Opportunity Grant.
+        
+        ---
+        ## 📝 YOUR APPLICATION MATERIAL AND NARRATIVE BANK
+        Tailored Objective: [Write a professional objective using their specific background]
+        The Bridge: [Write a story connecting their win to their new career]
+        
+        USER DATA: ${JSON.stringify(this.responses)}`;
 
         try {
             const res = await fetch('/api/generate-plan', {
@@ -132,11 +108,14 @@ class QuestionnaireApp {
             const data = await res.json();
             spinner.classList.add('hidden');
             
-            // Render Markdown cleanly
-            results.innerHTML = data.text
+            // CLEAN RENDERING ENGINE
+            results.innerHTML = `<div class="elite-report">${data.text
                 .replace(/\n/g, '<br>')
+                .replace(/---/g, '<hr style="margin: 40px 0;">')
+                .replace(/^# (.*$)/gim, '<h1 style="color:#1a202c; font-size: 2.5rem; border-bottom: 4px solid #3182ce; padding-bottom: 10px;">$1</h1>')
+                .replace(/^## (.*$)/gim, '<h2 style="color:#2d3748; font-size: 1.8rem; margin-top: 40px; background: #f7fafc; padding: 10px;">$1</h2>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/^## (.*$)/gim, '<h2 style="color:#2d3748; margin-top:20px;">$1</h2>');
+                .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: #3182ce; font-weight: bold;">$1</a>')}</div>`;
         } catch (e) {
             spinner.classList.add('hidden');
             results.innerHTML = "Error: " + e.message;
@@ -144,3 +123,4 @@ class QuestionnaireApp {
     }
 }
 window.app = new QuestionnaireApp();
+app.setupEventListeners();
