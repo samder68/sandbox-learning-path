@@ -1,3 +1,7 @@
+/**
+ * HIGH-SIGNAL QUESTIONNAIRE DATA
+ * Structured into 6 Modules for Deep Archetype Analysis
+ */
 const questionnaireData = [
     {
         title: "The Core",
@@ -55,7 +59,7 @@ class QuestionnaireApp {
         }
         this.currentSection = 0;
         
-        // Wait for DOM to be fully loaded
+        // Wait for DOM to be ready
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", () => this.init());
         } else {
@@ -68,7 +72,8 @@ class QuestionnaireApp {
         this.renderForm();
         this.setupEventListeners();
         this.updateProgress();
-        // Force spinner hidden on start
+        
+        // Ensure spinner is hidden on start
         const spinner = document.getElementById('loadingSpinner');
         if (spinner) spinner.classList.add('hidden');
     }
@@ -76,6 +81,7 @@ class QuestionnaireApp {
     renderNavigation() {
         const nav = document.getElementById('sectionNav');
         if (!nav) return;
+        
         nav.innerHTML = questionnaireData.map((s, i) => `
             <div class="section-nav-btn ${i === this.currentSection ? 'active' : ''}" data-index="${i}">
                 <span>Module ${i+1}</span>
@@ -83,6 +89,7 @@ class QuestionnaireApp {
             </div>
         `).join('');
 
+        // Re-attach listeners after rendering
         nav.querySelectorAll('.section-nav-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const idx = parseInt(btn.getAttribute('data-index'));
@@ -94,6 +101,7 @@ class QuestionnaireApp {
     renderForm() {
         const form = document.getElementById('questionnaire');
         if (!form) return;
+        
         const section = questionnaireData[this.currentSection];
         form.innerHTML = `
             <div class="section active">
@@ -110,16 +118,23 @@ class QuestionnaireApp {
         if (q.type === 'radio') {
             return `<div class="question"><p class="question__text">${q.text}</p>
                 <div class="radio-group">${q.options.map(opt => `
-                    <label class="radio-option"><input type="radio" name="${qId}" value="${opt}" ${val === opt ? 'checked' : ''}> ${opt}</label>
+                    <label class="radio-option">
+                        <input type="radio" name="${qId}" value="${opt}" ${val === opt ? 'checked' : ''}> 
+                        ${opt}
+                    </label>
                 `).join('')}</div></div>`;
         }
         if (q.type === 'checkbox') {
             const vals = Array.isArray(val) ? val : [];
             return `<div class="question"><p class="question__text">${q.text}</p>
                 <div class="checkbox-group">${q.options.map(opt => `
-                    <label class="checkbox-option"><input type="checkbox" name="${qId}" value="${opt}" ${vals.includes(opt) ? 'checked' : ''}> ${opt}</label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="${qId}" value="${opt}" ${vals.includes(opt) ? 'checked' : ''}> 
+                        ${opt}
+                    </label>
                 `).join('')}</div></div>`;
         }
+        // Text and Textarea fallthrough
         return `<div class="question"><p class="question__text">${q.text}</p>
             <textarea name="${qId}" class="form-control" rows="3">${val}</textarea></div>`;
     }
@@ -152,12 +167,17 @@ class QuestionnaireApp {
 
         const resetBtn = document.getElementById('resetBtn');
         if (resetBtn) resetBtn.onclick = () => { localStorage.clear(); location.reload(); };
+        
+        const dlBtn = document.getElementById('downloadBtn');
+        if (dlBtn) dlBtn.onclick = () => this.downloadData();
     }
 
     updateProgress() {
         const total = questionnaireData.reduce((acc, s) => acc + s.questions.length, 0);
-        const answered = Object.keys(this.responses).length;
+        // Count only non-empty responses
+        const answered = Object.values(this.responses).filter(v => v && v.length > 0).length;
         const pct = Math.min(Math.round((answered / total) * 100), 100);
+        
         const pb = document.getElementById('progressBar');
         const pt = document.getElementById('progressText');
         if (pb) pb.style.width = pct + '%';
@@ -188,6 +208,7 @@ class QuestionnaireApp {
             spinner.classList.add('hidden');
             
             if (data && data.text) {
+                // FORMATTING ENGINE
                 let formatted = data.text
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/^### (.*$)/gim, '<h3>$1</h3>')
@@ -202,7 +223,17 @@ class QuestionnaireApp {
             analysis.innerHTML = `<p style="color:red">Connection Error: ${error.message}</p>`;
         }
     }
+
+    downloadData() {
+        const dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(JSON.stringify(this.responses, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "career_discovery_data.txt");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
 }
 
-// Start the app
+// Initialize the app
 const app = new QuestionnaireApp();
