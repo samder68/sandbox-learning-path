@@ -48,9 +48,19 @@ const questionnaireData = [
 
 class QuestionnaireApp {
     constructor() {
-        this.responses = JSON.parse(localStorage.getItem('user_responses')) || {};
+        try {
+            this.responses = JSON.parse(localStorage.getItem('user_responses')) || {};
+        } catch (e) {
+            this.responses = {};
+        }
         this.currentSection = 0;
-        this.init();
+        
+        // Ensure DOM is ready before init
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => this.init());
+        } else {
+            this.init();
+        }
     }
 
     init() {
@@ -62,16 +72,26 @@ class QuestionnaireApp {
 
     renderNavigation() {
         const nav = document.getElementById('sectionNav');
+        if (!nav) return;
         nav.innerHTML = questionnaireData.map((s, i) => `
-            <div class="section-nav-btn ${i === this.currentSection ? 'active' : ''}" onclick="app.navigateToSection(${i})">
+            <div class="section-nav-btn ${i === this.currentSection ? 'active' : ''}" data-index="${i}">
                 <span>Module ${i+1}</span>
                 <strong>${s.title}</strong>
             </div>
         `).join('');
+
+        // Add event listeners to the new buttons
+        nav.querySelectorAll('.section-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                this.navigateToSection(idx);
+            });
+        });
     }
 
     renderForm() {
         const form = document.getElementById('questionnaire');
+        if (!form) return;
         const section = questionnaireData[this.currentSection];
         form.innerHTML = `
             <div class="section active">
@@ -84,6 +104,7 @@ class QuestionnaireApp {
     renderQuestion(q, i) {
         const qId = `q_${this.currentSection}_${i}`;
         const val = this.responses[qId] || '';
+        
         if (q.type === 'radio') {
             return `<div class="question"><p class="question__text">${q.text}</p>
                 <div class="radio-group">${q.options.map(opt => `
@@ -98,83 +119,103 @@ class QuestionnaireApp {
                 `).join('')}</div></div>`;
         }
         return `<div class="question"><p class="question__text">${q.text}</p>
-            <textarea name="${qId}" class="form-control">${val}</textarea></div>`;
+            <textarea name="${qId}" class="form-control" rows="3">${val}</textarea></div>`;
     }
 
     navigateToSection(i) {
         this.currentSection = i;
-        this.init();
+        this.renderNavigation();
+        this.renderForm();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     setupEventListeners() {
-        document.getElementById('questionnaire').oninput = (e) => {
-            const name = e.target.name;
-            if (e.target.type === 'checkbox') {
-                const checked = Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
-                this.responses[name] = checked;
-            } else {
-                this.responses[name] = e.target.value;
-            }
-            localStorage.setItem('user_responses', JSON.stringify(this.responses));
-            this.updateProgress();
-        };
+        const form = document.getElementById('questionnaire');
+        if (form) {
+            form.oninput = (e) => {
+                const name = e.target.name;
+                if (e.target.type === 'checkbox') {
+                    const checked = Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+                    this.responses[name] = checked;
+                } else {
+                    this.responses[name] = e.target.value;
+                }
+                localStorage.setItem('user_responses', JSON.stringify(this.responses));
+                this.updateProgress();
+            };
+        }
 
-        document.getElementById('getAiRecommendationsBtn').onclick = () => this.getRecommendations();
-        document.getElementById('resetBtn').onclick = () => { localStorage.clear(); location.reload(); };
+        const aiBtn = document.getElementById('getAiRecommendationsBtn');
+        if (aiBtn) aiBtn.onclick = () => this.getRecommendations();
+
+        const resetBtn = document.getElementById('resetBtn');
+        if (resetBtn) resetBtn.onclick = () => { localStorage.clear(); location.reload(); };
+        
+        const dlBtn = document.getElementById('downloadBtn');
+        if (dlBtn) dlBtn.onclick = () => this.downloadData();
     }
 
     updateProgress() {
         const total = questionnaireData.reduce((acc, s) => acc + s.questions.length, 0);
         const answered = Object.keys(this.responses).length;
-        const pct = Math.round((answered / total) * 100);
-        document.getElementById('progressBar').style.width = pct + '%';
-        document.getElementById('progressText').innerText = pct + '% Complete';
+        const pct = Math.min(Math.round((answered / total) * 100), 100);
+        const pb = document.getElementById('progressBar');
+        const pt = document.getElementById('progressText');
+        if (pb) pb.style.width = pct + '%';
+        if (pt) pt.innerText = pct + '% Complete';
     }
 
-   async getRecommendations() {
-    const resultsSection = document.getElementById('resultsSection');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const analysisResults = document.getElementById('analysisResults');
+    async getRecommendations() {
+        const results = document.getElementById('resultsSection');
+        const spinner = document.getElementById('loadingSpinner');
+        const analysis = document.getElementById('analysisResults');
 
-    // Reset view
-    resultsSection.classList.remove('hidden');
-    loadingSpinner.classList.remove('hidden');
-    analysisResults.innerHTML = ''; 
-    
-    // Set a 15-second "Safety Timer" so it doesn't spin forever
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+        results.classList.remove('hidden');
+        spinner.classList.remove('hidden');
+        analysis.innerHTML = '';
+        results.scrollIntoView({ behavior: 'smooth' });
 
-    try {
-      const response = await fetch('/api/generate-plan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          profile: JSON.stringify(this.responses), 
-          prompt: outputPromptText 
-        }),
-        signal: controller.signal
-      });
+        try {
+            const response = await fetch('/api/generate-plan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    profile: JSON.stringify(this.responses), 
+                    prompt: outputPromptText 
+                })
+            });
 
-      clearTimeout(timeoutId);
-      const data = await response.json();
-      loadingSpinner.classList.add('hidden');
-      
-      if (data && data.text) {
-        let formatted = data.text
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-            .replace(/🎯/g, '<br>🎯').replace(/🎓/g, '<br>🎓').replace(/💰/g, '<br>💰')
-            .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
-            .replace(/\n/g, '<br>');
-        
-        analysisResults.innerHTML = `<div class="ai-response-container">${formatted}</div>`;
-      }
-    } catch (error) {
-      clearTimeout(timeoutId);
-      loadingSpinner.classList.add('hidden');
-      analysisResults.innerHTML = `<p style="color:red">Error: ${error.name === 'AbortError' ? 'Request timed out. Check your internet or API.' : error.message}</p>`;
+            const data = await response.json();
+            spinner.classList.add('hidden');
+            
+            if (data && data.text) {
+                let formatted = data.text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                    .replace(/🎯/g, '<br>🎯').replace(/🎓/g, '<br>🎓').replace(/💰/g, '<br>💰')
+                    .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
+                    .replace(/\n/g, '<br>');
+                
+                analysis.innerHTML = `<div class="ai-response-container">${formatted}</div>`;
+            }
+        } catch (error) {
+            spinner.classList.add('hidden');
+            analysis.innerHTML = `<p style="color:red">Connection Error: ${error.message}</p>`;
+        }
     }
-  }
 
+    downloadData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.responses, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "career_discovery_data.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+}
+
+const outputPromptText = `Act as a Career Strategist. Analyze the user's archetypes from gaming, media, and learning styles. Provide 3 paths, 3 free resources, and tailored NJ-based aid.`;
+
+// Initialize the app
 const app = new QuestionnaireApp();
