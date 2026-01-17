@@ -163,38 +163,57 @@ class QuestionnaireApp {
         analysisResults.innerHTML = '';
         resultsSection.scrollIntoView({ behavior: 'smooth' });
 
+        // THE UPGRADED "TAILORED NARRATIVE" PROMPT
         const outputPromptText = `
-Act as an Elite Career Architect. Analyze the user's psychological archetypes, gaming styles, and experience.
-You MUST follow this EXACT Markdown structure:
+Act as an Elite Career Architect. You are analyzing a user who has provided specific life experiences, gaming styles, and technical hobbies.
+
+### CORE MISSION:
+Your response must be a MASTERPIECE of tailoring. Do not give generic advice. Use the user's specific answers (e.g., if they fix computers for family, use that specific detail) to build their "Narrative Bridge."
+
+### LINK INTEGRITY:
+Only use these verified root URLs for the learning stacks:
+- Coursera: https://www.coursera.org
+- Khan Academy: https://www.khanacademy.org
+- MIT OpenCourseWare: https://ocw.mit.edu
+- Professor Messer: https://www.professormesser.com
+- edX: https://www.edx.org
+
+### OUTPUT STRUCTURE (MANDATORY):
 
 # YOUR PERSONALIZED CAREER DISCOVERY PROFILE
+
 ## 🎯 YOUR LEARNING PROFILE ANALYSIS
-**Who You Are:** [Detailed analysis based on responses]
-**Your Advantage:** [Why their specific skills/gaming style give them an edge]
+**Who You Are:** [Write 2-3 sentences connecting their specific age, location, and current job to their goals.]
+**Your Advantage:** [Explain how their specific gaming style (e.g., Tactical) and hobbies (e.g., fixing family PCs) translate directly into professional skills.]
 
 ---
+
 ## 🎓 YOUR TOP LEARNING PATH MATCHES
-[Provide 3 Paths using the following sub-format for each]
-### **PATH NAME** ⭐ RECOMMENDED
-**Why This Fits:** [Specific reasoning]
-**Learning Stack (Free):** [List 3-4 real free resources with URLs to Coursera, Khan Academy, MIT OCW, etc.]
-**Paid Certification Investment:** [Cost breakdown]
+[Provide 3 Paths. Each path must include:]
+### **PATH NAME**
+**Why This Fits:** [Specifically reference their responses here.]
+**Learning Stack (Free):** [Provide 3 resources. Use the verified root URLs above followed by a search query instruction, e.g., "Search 'IT Support' on Coursera"]
 
 ---
+
 ## 💰 FINANCIAL AID & SCHOLARSHIPS
-[List FAFSA, WIOA, and specifically NJ-based aid like the Community College Opportunity Grant]
+[List FAFSA, WIOA, and the NJ Community College Opportunity Grant.]
 
 ---
-## 📝 YOUR APPLICATION MATERIAL AND NARRATIVE BANK
-[Provide 2 Resume Objectives and 3 Interview Narrative Themes]
+
+## 📝 YOUR APPLICATION MATERIAL & NARRATIVE BANK
+[This section must be HIGHLY TAILORED]
+**Tailored Resume Objective:** [Write a 3-4 line objective using their specific past job titles and their new target role.]
+**The Narrative Bridge:** [Write a specific "Story" the user can tell in an interview that connects their specific 'Effortless Win' to a professional skill.]
 
 ---
+
 ## 🎯 YOUR NEXT STEPS (THIS WEEK)
-[Day-by-day plan for the first 7 days]
+[A 7-day action plan]
 
 ---
-## 📚 MAIN PLATFORM DIRECTORY
-[Links to major sites referenced]
+
+USER DATA TO ANALYZE:
 `;
 
         try {
@@ -212,23 +231,23 @@ You MUST follow this EXACT Markdown structure:
             loadingSpinner.classList.add('hidden');
             
             if (data && data.text) {
-                // Formatting engine to render Markdown-style elements cleanly in the dashboard
+                // Formatting engine with improved link rendering
                 let formatted = data.text
                     .replace(/---/g, '<hr style="border: 0; border-top: 2px solid #e2e8f0; margin: 30px 0;">')
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/^# (.*$)/gim, '<h1 style="color:#1a202c; margin-bottom: 20px;">$1</h1>')
-                    .replace(/^## (.*$)/gim, '<h2 style="color:#2d3748; margin-top: 30px;">$1</h2>')
-                    .replace(/^### (.*$)/gim, '<h3 style="color:#4a5568; margin-top: 20px;">$1</h3>')
-                    .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="ai-link">$1</a>')
+                    .replace(/^# (.*$)/gim, '<h1 style="color:#1a202c; font-size: 2rem; margin-bottom: 20px;">$1</h1>')
+                    .replace(/^## (.*$)/gim, '<h2 style="color:#2d3748; font-size: 1.5rem; margin-top: 30px;">$1</h2>')
+                    .replace(/^### (.*$)/gim, '<h3 style="color:#4a5568; font-size: 1.25rem; margin-top: 20px;">$1</h3>')
+                    // Improved Regex to catch URLs and make them clickable buttons/links
+                    .replace(/((http|https):\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="ai-link" style="color: #3182ce; text-decoration: underline;">$1</a>')
                     .replace(/\n/g, '<br>');
                 
-                analysisResults.innerHTML = `<div class="ai-response-container" style="text-align: left; padding: 20px;">${formatted}</div>`;
+                analysisResults.innerHTML = `<div class="ai-response-container" style="background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); line-height: 1.6;">${formatted}</div>`;
             }
         } catch (error) {
             loadingSpinner.classList.add('hidden');
             analysisResults.innerHTML = `<p style="color:red; padding: 20px;"><strong>Error:</strong> ${error.message}</p>`;
         }
     }
-}
 
 const app = new QuestionnaireApp();
