@@ -55,7 +55,7 @@ class QuestionnaireApp {
         }
         this.currentSection = 0;
         
-        // Ensure DOM is ready before init
+        // Wait for DOM to be fully loaded
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", () => this.init());
         } else {
@@ -68,6 +68,9 @@ class QuestionnaireApp {
         this.renderForm();
         this.setupEventListeners();
         this.updateProgress();
+        // Force spinner hidden on start
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) spinner.classList.add('hidden');
     }
 
     renderNavigation() {
@@ -80,7 +83,6 @@ class QuestionnaireApp {
             </div>
         `).join('');
 
-        // Add event listeners to the new buttons
         nav.querySelectorAll('.section-nav-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const idx = parseInt(btn.getAttribute('data-index'));
@@ -150,9 +152,6 @@ class QuestionnaireApp {
 
         const resetBtn = document.getElementById('resetBtn');
         if (resetBtn) resetBtn.onclick = () => { localStorage.clear(); location.reload(); };
-        
-        const dlBtn = document.getElementById('downloadBtn');
-        if (dlBtn) dlBtn.onclick = () => this.downloadData();
     }
 
     updateProgress() {
@@ -181,7 +180,7 @@ class QuestionnaireApp {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     profile: JSON.stringify(this.responses), 
-                    prompt: outputPromptText 
+                    prompt: "Act as a Career Strategist. Analyze the user's archetypes from gaming, media, and learning styles. Provide 3 paths, 3 free resources, and tailored NJ-based aid." 
                 })
             });
 
@@ -203,19 +202,7 @@ class QuestionnaireApp {
             analysis.innerHTML = `<p style="color:red">Connection Error: ${error.message}</p>`;
         }
     }
-
-    downloadData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.responses, null, 2));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "career_discovery_data.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-    }
 }
 
-const outputPromptText = `Act as a Career Strategist. Analyze the user's archetypes from gaming, media, and learning styles. Provide 3 paths, 3 free resources, and tailored NJ-based aid.`;
-
-// Initialize the app
+// Start the app
 const app = new QuestionnaireApp();
