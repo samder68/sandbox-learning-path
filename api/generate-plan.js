@@ -1,25 +1,38 @@
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
 export default async function handler(req, res) {
-  const { profile, prompt } = req.body;
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4",
-        messages: [
-          { role: "system", content: prompt },
-          { role: "user", content: profile }
-        ],
-      }),
+    const { profile, prompt } = req.body;
+
+    // Check if API key is actually loading from Vercel settings
+    if (!process.env.OPENAI_API_KEY) {
+       return res.status(500).json({ error: 'API Key is missing from Vercel settings' });
+    }
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // Using mini for reliability in testing
+      messages: [
+        { role: "system", content: prompt },
+        { role: "user", content: `Analyze this user profile: ${profile}` }
+      ],
     });
 
-    const data = await response.json();
-    res.status(200).json({ text: data.choices[0].message.content });
+    return res.status(200).json({ text: response.choices[0].message.content });
+
   } catch (error) {
-    res.status(500).json({ error: "Failed to connect to AI" });
+    console.error('OpenAI Error:', error);
+    // This sends the SPECIFIC error back to your website instead of a generic 500
+    return res.status(500).json({ 
+      error: 'OpenAI API Failed', 
+      details: error.message 
+    });
   }
 }
