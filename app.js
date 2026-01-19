@@ -10,9 +10,8 @@ const questionnaireData = [
         text: "Are you a US Citizen, Permanent Resident, or DACA recipient?",
         options: ["US Citizen", "Permanent Resident", "DACA recipient", "Prefer not to say"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add any details you want considered."
+        textboxPrompt: "Optional: add any context (for example, eligibility nuances you want considered)."
       },
-
       {
         type: "radio",
         text: "What was your total individual/household income for the last tax year?",
@@ -26,9 +25,8 @@ const questionnaireData = [
           "Prefer not to say"
         ],
         hasTextbox: true,
-        textboxPrompt: "Optional: add context (dependents, recent changes, temporary income)."
+        textboxPrompt: "Optional: add context (for example, recent changes, dependents, temporary income)."
       },
-
       {
         type: "radio",
         text: "Are you currently employed?",
@@ -41,9 +39,8 @@ const questionnaireData = [
           "Student (Part-time)"
         ],
         hasTextbox: true,
-        textboxPrompt: "Optional: add details (industry, schedule constraints, job search status)."
+        textboxPrompt: "Optional: add details (for example, industry, schedule constraints, job search status)."
       },
-
       {
         type: "radio",
         text: "Are you a first-generation college student (the first in your family to attend)?",
@@ -51,23 +48,20 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "checkbox",
         text: "Are you a Veteran, active-duty member, a military spouse, or a military child? (Select all that apply)",
         options: ["Veteran", "Active-duty", "Military spouse", "Military child", "None of the above", "Prefer not to say"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add context (branch, benefits you may use)."
+        textboxPrompt: "Optional: add context (for example, service branch, benefits you may use)."
       },
-
       {
         type: "radio",
         text: "Do you identify as a member of an underrepresented community (Race, Ethnicity, or LGBTQ+)?",
         options: ["Yes", "No", "Prefer not to say"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add context (only if you want it considered for programs or support)."
+        textboxPrompt: "Optional: add context (only if you want this considered for programs or support)."
       },
-
       {
         type: "radio",
         text: "Are you a single parent or the primary caregiver for a child or dependent, or were you raised by a single parent?",
@@ -75,79 +69,58 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add caregiving details that impact time, schedule, or training format."
       },
-
       {
         type: "radio",
         text: "Do you have a documented disability or have you been diagnosed with a learning difference like ADHD or Dyslexia?",
         options: ["Yes", "No", "Prefer not to say"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add accommodations that help you learn best."
+        textboxPrompt: "Optional: add any accommodations that help you learn best."
       },
-
       {
         type: "radio",
         text: "What is the highest level of education you have completed?",
         options: [
           "Some high school",
-          "High school diploma or GED",
+          "High school diploma / GED",
           "Some college (no degree)",
-          "Certificate or trade program",
+          "Certificate / Trade program",
           "Associate degree",
           "Bachelor’s degree",
           "Master’s degree",
-          "Doctorate or professional degree",
-          "Prefer not to say"
+          "Doctorate / Professional degree",
+          "Other"
         ],
         hasTextbox: true,
-        textboxPrompt: "Optional: add major, certifications, or anything else relevant."
+        textboxPrompt: "Optional: add degree field(s), major, or certifications."
       },
-
       {
         type: "checkbox",
         text: "Do you speak, read, or write any languages other than English fluently? (Select all that apply)",
-        options: [
-          "Spanish",
-          "French",
-          "Portuguese",
-          "Italian",
-          "German",
-          "Arabic",
-          "Chinese (Mandarin/Cantonese)",
-          "Hindi/Urdu",
-          "Russian",
-          "Korean",
-          "Japanese",
-          "Other (write below)",
-          "No"
-        ],
+        options: ["Spanish", "French", "Arabic", "Mandarin", "Hindi", "Portuguese", "Russian", "Other", "None"],
         hasTextbox: true,
-        textboxPrompt: "Optional: list languages and proficiency (speaking/reading/writing)."
+        textboxPrompt: "Optional: list languages and proficiency details (and list any not shown)."
       },
-
       {
         type: "radio",
         text: "Do you have a reliable laptop and high-speed internet access for home study?",
-        options: ["Yes", "No", "Partially / not always", "Prefer not to say"],
+        options: ["Yes", "No", "Somewhat / depends"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add details (shared device, limited data, public Wi-Fi, etc.)."
+        textboxPrompt: "Optional: explain limitations (device, bandwidth, shared computer, public Wi-Fi, etc.)."
       },
-
       { type: "text", text: "How many hours per week can you realistically commit to training?" },
-
       {
         type: "radio",
         text: "Do you have a valid driver’s license and reliable transportation?",
-        options: ["Yes", "No", "Somewhat (limited)", "Prefer not to say"],
+        options: ["Yes", "No", "License but transportation is unreliable", "Prefer not to say"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add details (public transit access, car availability, travel limits)."
+        textboxPrompt: "Optional: add details (public transit, commute limits, driving constraints)."
       },
-
       {
         type: "radio",
         text: "If a training program were free but lasted 3–6 months, could you manage your bills during that time?",
-        options: ["Yes", "No", "Maybe / depends", "Prefer not to say"],
+        options: ["Yes", "Maybe (with support)", "No", "Not sure"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add context (work hours needed, childcare, savings, assistance)."
+        textboxPrompt: "Optional: add context (savings, support, part-time work needs, timeline constraints)."
       }
     ]
   },
@@ -162,89 +135,114 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add examples or favorites."
       },
-
       {
         type: "radio",
         text: "In a game like Backgammon, Cards, or Chess, do you play safe or do you enjoy taking risks?",
-        options: ["Play safe", "Enjoy taking risks", "A mix of both"],
+        options: ["Mostly safe", "Mostly risks", "Depends"],
         hasTextbox: true,
-        textboxPrompt: "Optional: describe your style."
+        textboxPrompt: "Optional: explain your style."
       },
-
       {
         type: "radio",
         text: "When you play a game, do you care more about the story/characters or the mechanics/rules?",
         options: ["Story/characters", "Mechanics/rules", "Both equally"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add a quick example."
+        textboxPrompt: "Optional: add examples."
       },
-
-      { type: "textarea", text: "Do you enjoy games where you manage resources or build a system (Minecraft, The Sims, Civilization)? What is your favorite game and why do you like it?" },
+      {
+        type: "radio",
+        text: "Do you enjoy games where you manage resources or build a system (Minecraft, The Sims, Civilization)?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What is your favorite game and why do you like it?" },
 
       {
         type: "radio",
         text: "In a team setting, are you the one calling the shots or the one supporting others?",
-        options: ["Calling the shots", "Supporting others", "Depends on the situation"],
+        options: ["Calling the shots", "Supporting others", "A mix / depends"],
         hasTextbox: true,
-        textboxPrompt: "Optional: describe what you tend to do and why."
+        textboxPrompt: "Optional: describe your usual role."
       },
-
       {
         type: "radio",
         text: "When you watch a show or movie, do you focus on the writing and setting choices, or do you just enjoy the storyline?",
-        options: ["Writing/setting choices", "Just enjoy the storyline", "Both"],
+        options: ["Writing/setting choices", "Storyline", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples."
+      },
+      {
+        type: "radio",
+        text: "Do you read for information (how-to, history, news) or escape (fiction, fantasy, stories)?",
+        options: ["Information", "Escape", "Both"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
-      { type: "textarea", text: "Do you read for information (how-to, history, news) or escape (fiction, fantasy, stories)? What is your favorite book or genre, and why?" },
+      { type: "textarea", text: "What is your favorite book or genre, and why?" },
 
       {
         type: "radio",
         text: "If you see an interesting fact, do you look it up right away to learn more?",
         options: ["Yes", "No", "Sometimes"],
         hasTextbox: true,
-        textboxPrompt: "Optional: share a recent example."
+        textboxPrompt: "Optional: add examples."
       },
-
-      { type: "textarea", text: "When listening to music, do you focus on the lyrics/story or the technical beat/instruments? What is your favorite music, band, song, and why?" },
+      {
+        type: "radio",
+        text: "When listening to music, do you focus on the lyrics/story or the technical beat/instruments?",
+        options: ["Lyrics/story", "Beat/instruments", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What is your favorite music, band, or song and why?" },
 
       {
         type: "radio",
-        text: "Do you enjoy learning lore (the background history and hidden details of a world)?",
+        text: "Do you enjoy learning lore (background history and hidden details of a world)?",
         options: ["Yes", "No", "Sometimes"],
         hasTextbox: true,
-        textboxPrompt: "Optional: share what kind of worlds you like (games, books, shows)."
+        textboxPrompt: "Optional: add examples (books, games, shows)."
       },
-
       {
         type: "radio",
-        text: "Do you prefer Baking (exact measurements) or Cooking (tasting and adjusting)?",
+        text: "Do you prefer baking (exact measurements) or cooking (tasting and adjusting)?",
         options: ["Baking", "Cooking", "Both", "Neither"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
-      { type: "textarea", text: "Have you ever taken a device apart just to see how it worked? What did you take apart and what did you learn?" },
+      {
+        type: "radio",
+        text: "Have you ever taken a device apart just to see how it worked?",
+        options: ["Yes", "No"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add details."
+      },
+      { type: "textarea", text: "What did you take apart and what did you learn?" },
 
       {
         type: "radio",
         text: "Are you the go-to person when friends’ electronics or apps act up?",
         options: ["Yes", "No", "Sometimes"],
         hasTextbox: true,
-        textboxPrompt: "Optional: what kinds of problems do you usually solve?"
+        textboxPrompt: "Optional: add examples."
       },
-
-      { type: "textarea", text: "Do you enjoy working with your hands (gardening, car repair, crafting)? What do you enjoy doing?" },
+      {
+        type: "radio",
+        text: "Do you enjoy working with your hands (gardening, car repair, crafting)?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What do you enjoy doing with your hands?" },
 
       {
         type: "radio",
         text: "Do you prefer a finished product you can touch or a digital result on a screen?",
         options: ["Physical/tangible", "Digital/on-screen", "Both"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add examples."
+        textboxPrompt: "Optional: explain your preference."
       },
-
       {
         type: "radio",
         text: "Do you notice typos or small errors on public signs or menus?",
@@ -252,23 +250,20 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you enjoy organizing items?",
         options: ["Yes", "No", "Sometimes"],
         hasTextbox: true,
-        textboxPrompt: "Optional: what do you like organizing (files, closets, schedules, etc.)?"
+        textboxPrompt: "Optional: what kinds of organizing do you like?"
       },
-
       {
         type: "radio",
         text: "Would you rather solve a complex math puzzle or write a 500-word story?",
-        options: ["Math puzzle", "Write a story", "Depends"],
+        options: ["Complex math puzzle", "Write a 500-word story", "Depends"],
         hasTextbox: true,
         textboxPrompt: "Optional: explain why."
       },
-
       {
         type: "radio",
         text: "When watching movies, do you often guess the ending before it happens?",
@@ -276,7 +271,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you find comfort in repetitive tasks (like sorting or cleaning) while listening to music?",
@@ -284,15 +278,13 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add examples."
       },
-
       {
         type: "radio",
         text: "If you were at a party, would you rather be the host, the person working the music, or a guest?",
-        options: ["Host", "Work the music", "Guest", "Avoid parties altogether"],
+        options: ["Host", "Person working the music", "Guest", "None of these"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add context."
+        textboxPrompt: "Optional: describe your social style."
       },
-
       {
         type: "radio",
         text: "Do you enjoy people-watching and trying to guess what others are thinking?",
@@ -300,8 +292,14 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
-      { type: "textarea", text: "Do you have a hobby that involves collecting and categorizing items? What have you collected and organized, and how do you describe your organization process (alphabetical, size, color, etc.)?" },
+      {
+        type: "radio",
+        text: "Do you have a hobby that involves collecting and categorizing items?",
+        options: ["Yes", "No", "Not sure"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What have you collected and organized, and how do you organize it (alphabetical, size, color, etc.)?" },
 
       {
         type: "radio",
@@ -310,7 +308,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: explain your approach."
       },
-
       {
         type: "radio",
         text: "Do you enjoy re-watching things you've already seen, or do you always need something new?",
@@ -318,7 +315,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "If you were a superhero, would you want the power of super-intelligence or super-strength?",
@@ -326,7 +322,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: describe your choice."
       },
-
       {
         type: "radio",
         text: "Do you enjoy the process of leveling up or grinding to earn rewards?",
@@ -334,7 +329,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add examples."
       },
-
       {
         type: "radio",
         text: "When you write an email, do you re-read it three times before sending it?",
@@ -342,7 +336,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you enjoy the feeling of checking off a long list of small tasks?",
@@ -350,7 +343,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Would you rather be a jack of all trades or a master of one specific skill?",
@@ -371,7 +363,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you learn better in a live classroom or by watching videos at your own pace?",
@@ -379,49 +370,48 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: explain what works best for you."
       },
-
       {
         type: "radio",
-        text: "You’ve received a graded test or a paper back. Do you prefer a teacher to explain your mistakes in detail, or can you figure it out from a score?",
+        text: "You’ve received a graded test or paper back. Do you prefer a teacher to explain your mistakes in detail, or can you figure it out from a score?",
         options: ["Explain my mistakes in detail", "I can figure it out from a score", "Depends"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you prefer a loud, collaborative environment or a quiet, solo workspace?",
-        options: ["Loud/collaborative", "Quiet/solo", "A mix of both"],
+        options: ["Loud/collaborative", "Quiet/solo", "Depends"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
-      { type: "text", text: "What is the longest you’ve ever spent focused on one mental task without getting up?" },
-
+      {
+        type: "radio",
+        text: "What is the longest you’ve ever spent focused on one mental task without getting up?",
+        options: ["Under 15 minutes", "15–30 minutes", "30–60 minutes", "1–2 hours", "2+ hours"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
       {
         type: "radio",
         text: "Do you retain info better by reading it, hearing it, or physically doing it?",
-        options: ["Reading", "Hearing", "Doing", "A mix of all three"],
+        options: ["Reading", "Hearing", "Doing", "Combination"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Does testing make you anxious, or do you enjoy proving what you know?",
-        options: ["Testing makes me anxious", "I enjoy proving what I know", "A mix of both"],
+        options: ["Testing makes me anxious", "I enjoy proving what I know", "Depends"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "If you are stuck, do you want the answer immediately or do you prefer to struggle through it?",
-        options: ["Answer immediately", "Prefer to struggle through it", "Depends"],
+        options: ["Answer immediately", "Prefer to struggle through it", "A mix"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you need a why behind what you are learning to stay motivated?",
@@ -429,15 +419,13 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you prefer learning broadly (a little of everything) or deeply (one mastery)?",
-        options: ["Broadly", "Deeply", "A mix of both"],
+        options: ["Broadly", "Deeply", "Both"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Can you learn while there is music or a TV on in the background?",
@@ -445,35 +433,31 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Does the idea of a project-based final grade sound better than a multiple choice exam?",
-        options: ["Project-based", "Multiple choice exam", "Depends"],
+        options: ["Project-based final", "Multiple choice exam", "Either is fine"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you prefer to learn in short 15-minute bursts or long 4-hour sessions?",
-        options: ["15-minute bursts", "4-hour sessions", "Somewhere in between"],
+        options: ["15-minute bursts", "Long 4-hour sessions", "Somewhere in between"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "If you don't understand something the first time, do you feel stupid or curious?",
-        options: ["Stupid", "Curious", "Both", "Neither / depends"],
+        options: ["Stupid", "Curious", "Neither / depends"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you need a set schedule to be successful, or do you prefer to be flexible?",
-        options: ["Set schedule", "Flexible", "A mix of both"],
+        options: ["Set schedule", "Flexible", "A mix"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       }
@@ -490,7 +474,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "If a project is failing, do you focus on fixing the process or the people?",
@@ -498,15 +481,13 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you find comfort in a strict routine, or do you need variety every day?",
-        options: ["Strict routine", "Variety every day", "A mix of both"],
+        options: ["Strict routine", "Variety every day", "A mix"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Would you rather talk to 20 people a day or 0 people a day?",
@@ -514,31 +495,27 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Are you the planner or the doer in your friend group?",
-        options: ["Planner", "Doer", "Both", "Depends"],
+        options: ["Planner", "Doer", "Both"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you prefer to be the expert in the room or the generalist who knows a bit of everything?",
-        options: ["Expert", "Generalist", "A mix of both"],
+        options: ["Expert", "Generalist", "Both"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Does a deadline make you panic or help you focus?",
-        options: ["Panic", "Helps me focus", "Depends"],
+        options: ["Panic", "Help me focus", "Depends"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "If you could never work in an office again, would you be happy?",
@@ -546,7 +523,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you enjoy explaining complex things to people who don't understand them?",
@@ -554,7 +530,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you prefer working on a team where everyone has a specific, separate role?",
@@ -562,7 +537,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "If two coworkers are arguing, do you step in to help or stay away from the drama?",
@@ -570,7 +544,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you prefer to be judged on your effort or your results?",
@@ -578,7 +551,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Are you okay with working outside in different weather conditions?",
@@ -586,39 +558,34 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you prefer a job where you are constantly moving, or one where you are sitting/focused?",
-        options: ["Constantly moving", "Sitting/focused", "A mix of both"],
+        options: ["Constantly moving", "Sitting/focused", "A mix"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "If your boss gave you a vague instruction, would you ask for clarity or just figure it out?",
-        options: ["Ask for clarity", "Figure it out", "A mix of both"],
+        options: ["Ask for clarity", "Figure it out", "A mix"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
-        text: "Do you enjoy the sale (convincing someone to see things your way)?",
+        text: "Do you enjoy the sale, convincing someone to see things your way?",
         options: ["Yes", "No", "Sometimes"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Is it more important to be right or to be kind at work?",
-        options: ["Right", "Kind", "Depends", "Both"],
+        options: ["Right", "Kind", "Balance both"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you prefer to work for a large company or a small start-up feel?",
@@ -626,15 +593,13 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "How do you handle a computer error: do you get angry or do you feel like it's a puzzle?",
-        options: ["Get angry", "Feel like it's a puzzle", "Depends"],
+        options: ["Angry/frustrated", "Puzzle/curious", "Depends"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Do you enjoy polishing something until it is perfect, or getting it done well enough?",
@@ -649,50 +614,33 @@ const questionnaireData = [
     title: "Pillar 5: Vision & Commitment (The Why)",
     questions: [
       { type: "textarea", text: "What is the #1 reason you want a new career right now?" },
-
       { type: "textarea", text: "If money were no object, what would you spend your Tuesday doing?" },
-
       { type: "textarea", text: "What is a dream job you think is currently out of your reach?" },
 
       {
         type: "radio",
         text: "How many months are you willing to train before you need to start earning?",
-        options: ["0–1 months", "2–3 months", "4–6 months", "7–12 months", "12+ months", "Not sure"],
+        options: ["0–1", "2–3", "4–6", "7–12", "12+"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add context (savings, obligations, urgency)."
+        textboxPrompt: "Optional: add context (timeline pressure, part-time needs, flexibility)."
       },
-
       {
         type: "radio",
         text: "Are you looking for a job (money) or a career (growth/identity)?",
-        options: ["Job (money)", "Career (growth/identity)", "Both", "Not sure"],
+        options: ["Job", "Career", "Not sure"],
         hasTextbox: true,
-        textboxPrompt: "Optional: add context."
+        textboxPrompt: "Optional: explain what you mean by job vs career for you."
       },
-
       {
         type: "radio",
         text: "Does helping your community drive your choices, or financial independence?",
-        options: ["Helping my community", "Financial independence", "Both", "Not sure"],
+        options: ["Helping my community", "Financial independence", "Both equally"],
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
 
-      {
-        type: "radio",
-        text: "What is the one subject in school you genuinely enjoyed?",
-        options: ["Math", "English/Language Arts", "Science", "History/Social Studies", "Art/Music", "Technology", "Other"],
-        hasTextbox: true,
-        textboxPrompt: "Optional: share which topic within that subject you liked."
-      },
-
-      {
-        type: "radio",
-        text: "What is the one subject you absolutely hated?",
-        options: ["Math", "English/Language Arts", "Science", "History/Social Studies", "Art/Music", "Technology", "Other"],
-        hasTextbox: true,
-        textboxPrompt: "Optional: share why."
-      },
+      { type: "text", text: "What is the one subject in school you genuinely enjoyed?" },
+      { type: "text", text: "What is the one subject you absolutely hated?" },
 
       {
         type: "radio",
@@ -701,7 +649,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "If you could move to any city for a free job/training, would you?",
@@ -709,7 +656,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add constraints (family, cost of living, region preferences)."
       },
-
       {
         type: "radio",
         text: "Do you want your work to be something you leave at the office or something you think about at home?",
@@ -717,7 +663,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "Is having a prestigious job title important to you?",
@@ -727,7 +672,6 @@ const questionnaireData = [
       },
 
       { type: "text", text: "What is your ideal starting salary to feel like this change was worth it?" },
-
       { type: "textarea", text: "Do you have any non-negotiables (for example, no weekends, must be remote, no heavy lifting)?" },
 
       {
@@ -737,7 +681,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: explain your choice."
       },
-
       {
         type: "radio",
         text: "Do you want a job where you are the face of the company or the engine behind the scenes?",
@@ -745,7 +688,6 @@ const questionnaireData = [
         hasTextbox: true,
         textboxPrompt: "Optional: add context."
       },
-
       {
         type: "radio",
         text: "How much do you value job security versus high growth potential?",
@@ -755,12 +697,10 @@ const questionnaireData = [
       },
 
       { type: "textarea", text: "Describe your dream job if money were no object." },
-
       {
         type: "textarea",
         text: "Describe a professional or personal accomplishment you are most proud of. What was the specific skill you used to achieve it, and what part of the process did you enjoy the most (planning, execution, problem-solving, final result, or recognition)?"
       },
-
       {
         type: "textarea",
         text: "Imagining your life 10 years from now, what would have to be true about your job in order for you to feel completely fulfilled and not consider it just a job? Focus on your sense of identity, daily impact, and mental well-being, not just salary or title."
@@ -768,6 +708,7 @@ const questionnaireData = [
     ]
   }
 ];
+
 
 class QuestionnaireApp {
   constructor() {
