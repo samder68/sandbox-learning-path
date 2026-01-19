@@ -1,46 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Discovery Engine</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="dashboard-container">
-        <header class="main-header">
-            <h1>Career Discovery Engine <span class="beta-tag">BETA</span></h1>
-            <p>A deep-dive diagnostic for those serious about their next chapter.</p>
-        </header>
-
-        <div class="progress-container">
-            <div id="progressText">0% Complete</div>
-            <div class="progress-bar-bg">
-                <div id="progressBar" style="width: 0%;"></div>
-            </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comprehensive Learning Path Discovery Questionnaire</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="container py-16">
+      <h1>YOUR Learning Path Discovery Questionnaire</h1>
+      <p>
+        Welcome! This comprehensive self-reflection tool is designed to help YOU clarify your
+        background, interests, goals, and preferences for your educational and career journey.
+        This questionnaire contains 113 questions across 15 sections - all questions are optional,
+        so answer only what feels helpful and relevant to you.
+      </p>
+      <div class="card my-8">
+        <div class="card__body">
+          <h3>How This Works</h3>
+          <ul>
+            <li><strong>Take your time</strong> - This is about YOUR self-discovery</li>
+            <li><strong>All questions are optional</strong> - Skip anything that doesn't apply</li>
+            <li><strong>Your responses auto-save</strong> - You can return anytime to continue</li>
+            <li><strong>Navigate freely</strong> - Use the section buttons to jump around</li>
+            <li><strong>Download when done</strong> - Get a complete file of YOUR responses</li>
+            <li><strong>Get AI recommendations</strong> - Click "Get My Recommendations" for personalized guidance</li>
+          </ul>
+          <p class="text-sm color-text-secondary mt-8">
+            <strong>Privacy:</strong> Your answers remain completely private in your browser. 
+            No data is sent to any server except when you request AI recommendations.
+          </p>
         </div>
+      </div>
+    </header>
 
-        <div class="module-grid" id="sectionNav"></div>
+    <nav class="section-nav container flex flex-wrap gap-4" id="sectionNav"></nav>
 
-        <main class="content-area">
-            <form id="questionnaire">
-                </form>
-            
-            <div class="action-buttons">
-                <button id="getAiRecommendationsBtn" class="btn-primary">Generate My Career Brief</button>
-                <button id="downloadBtn" class="btn-secondary">Download Data (.txt)</button>
-                <button id="resetBtn" class="btn-danger">Hard Reset</button>
-            </div>
-        </main>
-
-        <section id="resultsSection" class="hidden">
-            <div id="loadingSpinner" class="hidden">
-                <div class="spinner"></div>
-                <p>Analyzing your archetypes and searching for affordable paths...</p>
-            </div>
-            <div id="analysisResults" class="ai-response-container"></div>
-        </section>
+    <div class="container">
+      <div class="progress">
+        <div class="progress__bar" id="progressBar"></div>
+      </div>
+      <p class="text-sm color-text-secondary mb-8" id="progressText">
+        0 of 113 questions answered (0%)
+      </p>
     </div>
+
+    <main class="container" id="formContainer">
+      <form id="questionnaire" class="flex flex-col gap-16"></form>
+
+      <div class="py-16 flex justify-between items-center flex-wrap gap-16">
+        <button type="button" id="downloadBtn" class="btn btn--primary btn--lg">
+          📄 Download MY Responses
+        </button>
+        <button type="button" id="resetBtn" class="btn btn--secondary btn--lg">
+          Reset / Clear Form
+        </button>
+
+        <div class="text-sm color-text-secondary">
+          <strong>Remember:</strong> All questions are optional - answer what feels right for YOU
+        </div>
+      </div>
+
+      <div id="resultsSection" class="py-16 hidden">
+        <div class="card">
+          <div class="card__body">
+            <h2>Your Personalized Learning Path Recommendations</h2>
+            <div id="loadingSpinner" class="text-center py-16 hidden">
+              <div class="spinner"></div>
+              <p class="mt-8">Analyzing your responses and generating personalized recommendations...</p>
+            </div>
+            <div id="analysisResults" class="mt-16"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="container py-16">
+      <div class="card">
+        <div class="card__body">
+          <h3>DIRECTIONS</h3>
+          <p>Make sure you remember where your file is saved. Then, upload the text file into the AI tool of your choice (ChatGPT, Claude, Gemini, Perplexity, etc.) for analysis with the following prompt: "Follow the directions in the attached file."</p>
+          <h3>What Happens Next?</h3>
+          <p>Once you download your responses, you can use this comprehensive self-assessment to:</p>
+          <ul>
+            <li>Share with career counselors, advisors, or mentors for personalized guidance</li>
+            <li>Apply for scholarships that match your background and goals</li>
+            <li>Explore educational programs that align with your learning style and interests</li>
+            <li>Reflect on your journey and track how your goals evolve over time</li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
     <script src="app.js"></script>
-</body>
+  </body>
 </html>

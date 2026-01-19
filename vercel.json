@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/generate-plan.js": {
+    "api/analyze.js": {
       "maxDuration": 60
     }
   }
