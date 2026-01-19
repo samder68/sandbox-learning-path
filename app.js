@@ -1,231 +1,714 @@
 // Questionnaire data with all 113 questions across 15 sections
 const questionnaireData = [
   {
-    title: "Why Are YOU Here? (Goals)",
+    title: "Pillar 1: The Practical Foundation (Financial & Aid Eligibility)",
     questions: [
+      { type: "text", text: "What is your current zip code?" },
+
       {
-        type: "checkbox",
-        text: "What's your main reason for using this tool? (Check all that apply)",
-        options: [
-          "I have no idea what I want to study or do for work",
-          "I want to explore career options before committing to college",
-          "I'm looking for free ways to learn new skills",
-          "I need help finding scholarships or financial aid",
-          "I want to change careers but don't know where to start",
-          "I'm curious about myself and what fits my personality",
-          "I need material for college essays or applications",
-          "Someone suggested I check this out",
-          "I'm just Browse/curious"
-        ],
+        type: "radio",
+        text: "Are you a US Citizen, Permanent Resident, or DACA recipient?",
+        options: ["US Citizen", "Permanent Resident", "DACA recipient", "Prefer not to say"],
         hasTextbox: true,
-        textboxPrompt: "What else brought you here today? Think about what's going on in your life that made you want to explore learning opportunities."
-      },
-      {
-        type: "textarea",
-        text: "What would make this time well-spent for you? What are you hoping to gain or discover?",
-        hasTextbox: true,
-        textboxPrompt: "Describe what success looks like after completing this questionnaire."
+        textboxPrompt: "Optional: add any context (for example, eligibility nuances you want considered)."
       },
       {
         type: "radio",
-        text: "How much time do you want to spend on this questionnaire?",
-        options: ["Less than 30 minutes", "30-60 minutes", "1-2 hours", "Take my time over multiple sessions"]
+        text: "What was your total individual/household income for the last tax year?",
+        options: [
+          "Under $25,000",
+          "$25,000–$49,999",
+          "$50,000–$74,999",
+          "$75,000–$99,999",
+          "$100,000–$149,999",
+          "$150,000+",
+          "Prefer not to say"
+        ],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context (for example, recent changes, dependents, temporary income)."
       },
       {
-        type: "textarea",
-        text: "Are you currently facing any specific decisions or deadlines related to education or career choices?",
+        type: "radio",
+        text: "Are you currently employed?",
+        options: [
+          "Full-time",
+          "Part-time",
+          "Unemployed",
+          "Underemployed",
+          "Student (Full-time)",
+          "Student (Part-time)"
+        ],
         hasTextbox: true,
-        textboxPrompt: "Think about any upcoming decisions, application deadlines, or life changes that are motivating you to explore your options now."
+        textboxPrompt: "Optional: add details (for example, industry, schedule constraints, job search status)."
       },
       {
-        type: "textarea",
-        text: "What's your biggest question about your future right now?",
+        type: "radio",
+        text: "Are you a first-generation college student (the first in your family to attend)?",
+        options: ["Yes", "No", "Not sure", "Prefer not to say"],
         hasTextbox: true,
-        textboxPrompt: "This might be about career paths, education choices, or life direction in general."
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "checkbox",
+        text: "Are you a Veteran, active-duty member, a military spouse, or a military child? (Select all that apply)",
+        options: ["Veteran", "Active-duty", "Military spouse", "Military child", "None of the above", "Prefer not to say"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context (for example, service branch, benefits you may use)."
+      },
+      {
+        type: "radio",
+        text: "Do you identify as a member of an underrepresented community (Race, Ethnicity, or LGBTQ+)?",
+        options: ["Yes", "No", "Prefer not to say"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context (only if you want this considered for programs or support)."
+      },
+      {
+        type: "radio",
+        text: "Are you a single parent or the primary caregiver for a child or dependent, or were you raised by a single parent?",
+        options: ["Yes", "No", "Prefer not to say"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add caregiving details that impact time, schedule, or training format."
+      },
+      {
+        type: "radio",
+        text: "Do you have a documented disability or have you been diagnosed with a learning difference like ADHD or Dyslexia?",
+        options: ["Yes", "No", "Prefer not to say"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add any accommodations that help you learn best."
+      },
+      {
+        type: "radio",
+        text: "What is the highest level of education you have completed?",
+        options: [
+          "Some high school",
+          "High school diploma / GED",
+          "Some college (no degree)",
+          "Certificate / Trade program",
+          "Associate degree",
+          "Bachelor’s degree",
+          "Master’s degree",
+          "Doctorate / Professional degree",
+          "Other"
+        ],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add degree field(s), major, or certifications."
+      },
+      {
+        type: "checkbox",
+        text: "Do you speak, read, or write any languages other than English fluently? (Select all that apply)",
+        options: ["Spanish", "French", "Arabic", "Mandarin", "Hindi", "Portuguese", "Russian", "Other", "None"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: list languages and proficiency details (and list any not shown)."
+      },
+      {
+        type: "radio",
+        text: "Do you have a reliable laptop and high-speed internet access for home study?",
+        options: ["Yes", "No", "Somewhat / depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain limitations (device, bandwidth, shared computer, public Wi-Fi, etc.)."
+      },
+      { type: "text", text: "How many hours per week can you realistically commit to training?" },
+      {
+        type: "radio",
+        text: "Do you have a valid driver’s license and reliable transportation?",
+        options: ["Yes", "No", "License but transportation is unreliable", "Prefer not to say"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add details (public transit, commute limits, driving constraints)."
+      },
+      {
+        type: "radio",
+        text: "If a training program were free but lasted 3–6 months, could you manage your bills during that time?",
+        options: ["Yes", "Maybe (with support)", "No", "Not sure"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context (savings, support, part-time work needs, timeline constraints)."
       }
     ]
   },
+
   {
-    title: "Who YOU Are (Identity & Background)",
+    title: "Pillar 2: Deep Resonance (Interests & Hobbies)",
     questions: [
-      { type: "radio", text: "What's your age range?", options: ["Under 18", "18-24", "25-34", "35-44", "45-54", "55-64", "65+"] },
-      { type: "radio", text: "How do you identify your gender?", options: ["Woman", "Man", "Non-binary", "Prefer not to say", "Other"] },
-      { type: "checkbox", text: "What racial or ethnic background(s) do you identify with? (Select all that apply)", options: ["White", "Black/African American", "Hispanic/Latino", "Asian", "Native American", "Pacific Islander", "Middle Eastern", "Other", "Prefer not to say"] },
-      { type: "text", text: "Where are you located? (City, State/Province, Country)", id: "user-location" },
-      { type: "checkbox", text: "What languages do you speak? (Select all that apply)", options: ["English", "Spanish", "French", "German", "Chinese/Mandarin", "Japanese", "Korean", "Arabic", "Portuguese", "Russian", "Other"] },
-      { type: "text", text: "How would you describe your religious or spiritual identity? (Optional)" },
-      { type: "radio", text: "If you're comfortable sharing, how would you describe your political views?", options: ["Very liberal", "Liberal", "Moderate", "Conservative", "Very conservative", "No political views", "Prefer not to say"] },
-      { type: "radio", text: "Do you identify as having a learning difference, disability, or neurodivergence?", options: ["Yes", "No", "Unsure", "Prefer not to say"] },
-      { type: "textarea", text: "How has your family background or upbringing influenced your goals and values?", hasTextbox: true, textboxPrompt: "Think about family expectations, cultural traditions, or experiences that have shaped who you are." },
-      { type: "textarea", text: "What communities or groups do you feel most connected to?", hasTextbox: true, textboxPrompt: "This could include cultural communities, online groups, professional networks, hobby communities, etc." }
+      {
+        type: "radio",
+        text: "Do you enjoy games that involve finding patterns (Wordle, Crosswords, Sudoku)?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples or favorites."
+      },
+      {
+        type: "radio",
+        text: "In a game like Backgammon, Cards, or Chess, do you play safe or do you enjoy taking risks?",
+        options: ["Mostly safe", "Mostly risks", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain your style."
+      },
+      {
+        type: "radio",
+        text: "When you play a game, do you care more about the story/characters or the mechanics/rules?",
+        options: ["Story/characters", "Mechanics/rules", "Both equally"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy games where you manage resources or build a system (Minecraft, The Sims, Civilization)?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What is your favorite game and why do you like it?" },
+
+      {
+        type: "radio",
+        text: "In a team setting, are you the one calling the shots or the one supporting others?",
+        options: ["Calling the shots", "Supporting others", "A mix / depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: describe your usual role."
+      },
+      {
+        type: "radio",
+        text: "When you watch a show or movie, do you focus on the writing and setting choices, or do you just enjoy the storyline?",
+        options: ["Writing/setting choices", "Storyline", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples."
+      },
+      {
+        type: "radio",
+        text: "Do you read for information (how-to, history, news) or escape (fiction, fantasy, stories)?",
+        options: ["Information", "Escape", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What is your favorite book or genre, and why?" },
+
+      {
+        type: "radio",
+        text: "If you see an interesting fact, do you look it up right away to learn more?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples."
+      },
+      {
+        type: "radio",
+        text: "When listening to music, do you focus on the lyrics/story or the technical beat/instruments?",
+        options: ["Lyrics/story", "Beat/instruments", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What is your favorite music, band, or song and why?" },
+
+      {
+        type: "radio",
+        text: "Do you enjoy learning lore (background history and hidden details of a world)?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples (books, games, shows)."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer baking (exact measurements) or cooking (tasting and adjusting)?",
+        options: ["Baking", "Cooking", "Both", "Neither"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Have you ever taken a device apart just to see how it worked?",
+        options: ["Yes", "No"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add details."
+      },
+      { type: "textarea", text: "What did you take apart and what did you learn?" },
+
+      {
+        type: "radio",
+        text: "Are you the go-to person when friends’ electronics or apps act up?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy working with your hands (gardening, car repair, crafting)?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What do you enjoy doing with your hands?" },
+
+      {
+        type: "radio",
+        text: "Do you prefer a finished product you can touch or a digital result on a screen?",
+        options: ["Physical/tangible", "Digital/on-screen", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain your preference."
+      },
+      {
+        type: "radio",
+        text: "Do you notice typos or small errors on public signs or menus?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy organizing items?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: what kinds of organizing do you like?"
+      },
+      {
+        type: "radio",
+        text: "Would you rather solve a complex math puzzle or write a 500-word story?",
+        options: ["Complex math puzzle", "Write a 500-word story", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain why."
+      },
+      {
+        type: "radio",
+        text: "When watching movies, do you often guess the ending before it happens?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you find comfort in repetitive tasks (like sorting or cleaning) while listening to music?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples."
+      },
+      {
+        type: "radio",
+        text: "If you were at a party, would you rather be the host, the person working the music, or a guest?",
+        options: ["Host", "Person working the music", "Guest", "None of these"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: describe your social style."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy people-watching and trying to guess what others are thinking?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you have a hobby that involves collecting and categorizing items?",
+        options: ["Yes", "No", "Not sure"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      { type: "textarea", text: "What have you collected and organized, and how do you organize it (alphabetical, size, color, etc.)?" },
+
+      {
+        type: "radio",
+        text: "When you learn a new hobby, do you buy all the gear immediately or start with the basics?",
+        options: ["Buy all the gear", "Start with the basics", "It depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain your approach."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy re-watching things you've already seen, or do you always need something new?",
+        options: ["Re-watch", "Need something new", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "If you were a superhero, would you want the power of super-intelligence or super-strength?",
+        options: ["Super-intelligence", "Super-strength", "Something else"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: describe your choice."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy the process of leveling up or grinding to earn rewards?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add examples."
+      },
+      {
+        type: "radio",
+        text: "When you write an email, do you re-read it three times before sending it?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy the feeling of checking off a long list of small tasks?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Would you rather be a jack of all trades or a master of one specific skill?",
+        options: ["Jack of all trades", "Master of one skill", "A mix of both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain your preference."
+      }
     ]
   },
+
   {
-    title: "YOUR Current Reality (Lifestyle & Access)",
+    title: "Pillar 3: Learning Modalities & Environment",
     questions: [
-      { type: "radio", text: "What best describes your current situation?", options: ["Full-time student", "Part-time student", "Full-time employed", "Part-time employed", "Unemployed/job searching", "Self-employed/freelancer", "Caring for family members", "Retired", "Between opportunities", "Other"] },
-      { type: "radio", text: "Are you planning to pursue formal education or training?", options: ["Yes, within 6 months", "Yes, within 1-2 years", "Maybe someday", "No, looking for alternatives", "Already enrolled in something"] },
-      { type: "radio", text: "Realistically, how much time do you have available for learning or skill development?", options: ["Less than 5 hours/week", "5-10 hours/week", "10-20 hours/week", "20-40 hours/week", "More than 40 hours/week", "Very inconsistent schedule"] },
-      { type: "checkbox", text: "What devices do you have reliable access to? (Select all that apply)", options: ["Smartphone", "Laptop", "Desktop computer", "Tablet", "None of these regularly"] },
-      { type: "radio", text: "How would you rate your internet access?", options: ["Excellent (high-speed, reliable)", "Good (mostly reliable)", "Fair (sometimes slow/cuts out)", "Poor (limited access)", "Very limited or no access"] },
-      { type: "radio", text: "Do you have a quiet, private space where you can focus on learning?", options: ["Yes, always available", "Yes, sometimes available", "Rarely available", "No quiet space available"] },
-      { type: "textarea", text: "Do you have caregiving responsibilities that affect your schedule or energy?", hasTextbox: true, textboxPrompt: "This could include children, elderly parents, family members with disabilities, etc." },
-      { type: "rating", text: "How much do financial concerns affect your educational or career decisions?", scale: 5, labels: ["No impact", "Major impact"] },
-      { type: "rating", text: "How emotionally ready do you feel for making significant changes in your life?", scale: 5, labels: ["Not ready", "Very ready"] },
-      { type: "textarea", text: "Describe your typical energy levels and how your daily life is structured", hasTextbox: true, textboxPrompt: "Think about when you have the most energy, what drains you, and how predictable your routine is." }
+      {
+        type: "radio",
+        text: "You bought complex furniture. Do you read the manual first or start building immediately?",
+        options: ["Read the manual first", "Start building immediately", "A mix of both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you learn better in a live classroom or by watching videos at your own pace?",
+        options: ["Live classroom", "Videos at my own pace", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain what works best for you."
+      },
+      {
+        type: "radio",
+        text: "You’ve received a graded test or paper back. Do you prefer a teacher to explain your mistakes in detail, or can you figure it out from a score?",
+        options: ["Explain my mistakes in detail", "I can figure it out from a score", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer a loud, collaborative environment or a quiet, solo workspace?",
+        options: ["Loud/collaborative", "Quiet/solo", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "What is the longest you’ve ever spent focused on one mental task without getting up?",
+        options: ["Under 15 minutes", "15–30 minutes", "30–60 minutes", "1–2 hours", "2+ hours"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you retain info better by reading it, hearing it, or physically doing it?",
+        options: ["Reading", "Hearing", "Doing", "Combination"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Does testing make you anxious, or do you enjoy proving what you know?",
+        options: ["Testing makes me anxious", "I enjoy proving what I know", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "If you are stuck, do you want the answer immediately or do you prefer to struggle through it?",
+        options: ["Answer immediately", "Prefer to struggle through it", "A mix"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you need a why behind what you are learning to stay motivated?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer learning broadly (a little of everything) or deeply (one mastery)?",
+        options: ["Broadly", "Deeply", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Can you learn while there is music or a TV on in the background?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Does the idea of a project-based final grade sound better than a multiple choice exam?",
+        options: ["Project-based final", "Multiple choice exam", "Either is fine"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer to learn in short 15-minute bursts or long 4-hour sessions?",
+        options: ["15-minute bursts", "Long 4-hour sessions", "Somewhere in between"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "If you don't understand something the first time, do you feel stupid or curious?",
+        options: ["Stupid", "Curious", "Neither / depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you need a set schedule to be successful, or do you prefer to be flexible?",
+        options: ["Set schedule", "Flexible", "A mix"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      }
     ]
   },
+
   {
-    title: "How YOU Learn Best (Learning Preferences)",
+    title: "Pillar 4: Work Personality & Soft Skills",
     questions: [
-      { type: "radio", text: "What's your preferred learning pace?", options: ["Very fast - I like to move quickly", "Fast - I prefer efficiency", "Moderate - Steady but thorough", "Slow and thorough - I need time to process", "Very slow - I need lots of time and repetition"] },
-      { type: "checkbox", text: "What learning formats appeal to you most? (Select all that apply)", options: ["Online courses/videos", "In-person classes", "Books and reading", "Podcasts/audio", "Hands-on workshops", "One-on-one tutoring/mentoring", "Study groups", "Self-paced learning", "Other"] },
-      { type: "radio", text: "Do you prefer learning alone or with others?", options: ["Always alone", "Usually alone", "No strong preference", "Usually with others", "Always with others"] },
-      { type: "rating", text: "How comfortable are you with online/digital learning?", scale: 5, labels: ["Very uncomfortable", "Very comfortable"] },
-      { type: "textarea", text: "Describe the best learning experience you've ever had - what made it work so well?", hasTextbox: true, textboxPrompt: "This could be from school, work training, a hobby, or anywhere else." },
-      { type: "radio", text: "How much structure do you prefer in your learning?", options: ["Highly structured with clear curriculum", "Some structure with flexibility", "Minimal structure, mostly self-directed", "Complete freedom to explore"] },
-      { type: "textarea", text: "What learning accommodations or supports do you need to be successful?", hasTextbox: true, textboxPrompt: "This could include extra time, different formats, specific technologies, etc." },
-      { type: "textarea", text: "What learning methods have NOT worked well for you in the past?", hasTextbox: true, textboxPrompt: "Understanding what doesn't work is just as important as knowing what does." }
+      {
+        type: "radio",
+        text: "Are you a blank page person (starting fresh) or a rewrite page person (fixing/improving)?",
+        options: ["Blank page", "Rewrite page", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "If a project is failing, do you focus on fixing the process or the people?",
+        options: ["Fixing the process", "Fixing the people", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you find comfort in a strict routine, or do you need variety every day?",
+        options: ["Strict routine", "Variety every day", "A mix"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Would you rather talk to 20 people a day or 0 people a day?",
+        options: ["20 people a day", "0 people a day", "Somewhere in between"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Are you the planner or the doer in your friend group?",
+        options: ["Planner", "Doer", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer to be the expert in the room or the generalist who knows a bit of everything?",
+        options: ["Expert", "Generalist", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Does a deadline make you panic or help you focus?",
+        options: ["Panic", "Help me focus", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "If you could never work in an office again, would you be happy?",
+        options: ["Yes", "No", "Not sure"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy explaining complex things to people who don't understand them?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer working on a team where everyone has a specific, separate role?",
+        options: ["Yes", "No", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "If two coworkers are arguing, do you step in to help or stay away from the drama?",
+        options: ["Step in to help", "Stay away", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer to be judged on your effort or your results?",
+        options: ["Effort", "Results", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Are you okay with working outside in different weather conditions?",
+        options: ["Yes", "No", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer a job where you are constantly moving, or one where you are sitting/focused?",
+        options: ["Constantly moving", "Sitting/focused", "A mix"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "If your boss gave you a vague instruction, would you ask for clarity or just figure it out?",
+        options: ["Ask for clarity", "Figure it out", "A mix"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy the sale, convincing someone to see things your way?",
+        options: ["Yes", "No", "Sometimes"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Is it more important to be right or to be kind at work?",
+        options: ["Right", "Kind", "Balance both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you prefer to work for a large company or a small start-up feel?",
+        options: ["Large company", "Small start-up feel", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "How do you handle a computer error: do you get angry or do you feel like it's a puzzle?",
+        options: ["Angry/frustrated", "Puzzle/curious", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Do you enjoy polishing something until it is perfect, or getting it done well enough?",
+        options: ["Polish until perfect", "Done well enough", "Depends"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      }
     ]
   },
+
   {
-    title: "YOUR Academic Journey (School Experiences)",
+    title: "Pillar 5: Vision & Commitment (The Why)",
     questions: [
-      { type: "radio", text: "What's the highest level of education you've completed?", options: ["Less than high school", "High school diploma/GED", "Some college (no degree)", "Associate degree", "Bachelor's degree", "Master's degree", "Doctoral degree", "Professional degree (law, medicine, etc.)"] },
-      { type: "text", text: "What was your main field of study or area of focus?" },
-      { type: "rating", text: "How satisfied were you with your previous educational experiences?", scale: 5, labels: ["Very dissatisfied", "Very satisfied"] },
-      { type: "textarea", text: "What subjects or areas did you excel in during school?", hasTextbox: true, textboxPrompt: "Think about both the subjects themselves and what made you good at them." },
-      { type: "textarea", text: "What subjects or areas did you struggle with, and why do you think that was?", hasTextbox: true, textboxPrompt: "Was it the content, teaching style, your interest level, or something else?" },
-      { type: "radio", text: "How long has it been since you were last in a formal educational setting?", options: ["Currently enrolled", "Less than 1 year", "1-3 years", "3-5 years", "5-10 years", "More than 10 years"] },
-      { type: "textarea", text: "What study habits or learning strategies worked best for you?", hasTextbox: true, textboxPrompt: "Think about how you prepared for tests, completed projects, or mastered difficult material." },
-      { type: "rating", text: "How confident do you feel about your ability to succeed in academic learning?", scale: 5, labels: ["Not confident", "Very confident"] },
-      { type: "textarea", text: "If you could redesign your educational experience, what would you change?", hasTextbox: true, textboxPrompt: "Think about pace, content, teaching methods, or anything else that would have made it better." }
-    ]
-  },
-  {
-    title: "YOUR Work & Life Experience",
-    questions: [
-      { type: "textarea", text: "Describe your current job or most recent work experience" },
-      { type: "checkbox", text: "What industries or sectors have you worked in? (Select all that apply)", options: ["Technology", "Healthcare", "Education", "Retail/Customer service", "Manufacturing", "Finance/Banking", "Government", "Non-profit", "Food service", "Construction/Trades", "Transportation", "Other"] },
-      { type: "textarea", text: "What work tasks or responsibilities do you find most enjoyable?", hasTextbox: true, textboxPrompt: "Think about the specific activities that make you feel engaged and energized." },
-      { type: "textarea", text: "What work tasks or responsibilities do you find most draining or frustrating?", hasTextbox: true, textboxPrompt: "Consider what makes you feel stressed, bored, or unfulfilled." },
-      { type: "rating", text: "How satisfied are you with your current career path?", scale: 5, labels: ["Very dissatisfied", "Very satisfied"] },
-      { type: "textarea", text: "What would you change about your work situation if you could?", hasTextbox: true, textboxPrompt: "This could be about the work itself, the environment, schedule, pay, or anything else." }
-    ]
-  },
-  {
-    title: "What Interests YOU (Passions & Curiosities)",
-    questions: [
-      { type: "checkbox", text: "What subject areas genuinely interest you? (Select all that apply)", options: ["Technology/Programming", "Business/Entrepreneurship", "Arts/Creative fields", "Sciences (Biology, Chemistry, Physics)", "Healthcare/Medicine", "Education/Teaching", "Social work/Human services", "Skilled trades", "Sports/Fitness", "Environmental issues", "Other"] },
-      { type: "textarea", text: "What hobbies or interests do you pursue in your free time?", hasTextbox: true, textboxPrompt: "Include anything you do for enjoyment, learning, or personal satisfaction." },
-      { type: "checkbox", text: "What types of activities energize you? (Select all that apply)", options: ["Solving complex problems", "Creating or building things", "Helping others", "Leading teams or projects", "Analyzing data or information", "Working with your hands", "Teaching or explaining", "Performing or presenting", "Organizing and planning", "Other"] },
-      { type: "textarea", text: "What topics do you find yourself reading about or researching in your spare time?", hasTextbox: true, textboxPrompt: "Think about what you're naturally curious about." },
-      { type: "textarea", text: "If you had unlimited time and resources, what would you want to learn or explore?", hasTextbox: true, textboxPrompt: "Don't worry about practicality - what genuinely excites you?" },
-      { type: "textarea", text: "What problems in the world do you wish you could help solve?", hasTextbox: true, textboxPrompt: "This could be local community issues or global challenges." },
-      { type: "checkbox", text: "What motivates you to learn new things? (Select all that apply)", options: ["Career advancement", "Personal growth", "Pure curiosity", "Solving problems", "Financial improvement", "Recognition/achievement", "Helping others", "Creative expression", "Other"] },
-      { type: "textarea", text: "Describe a time when you learned something challenging successfully - what kept you motivated?", hasTextbox: true, textboxPrompt: "This could be from work, school, hobbies, or personal life." },
-      { type: "rating", text: "How much do you enjoy learning new things in general?", scale: 5, labels: ["Dislike learning", "Love learning"] },
-      { type: "textarea", text: "What's something you've always wanted to try but haven't had the chance to?", hasTextbox: true, textboxPrompt: "This could be a skill, career, experience, or area of study." },
-      { type: "textarea", text: "When you imagine your ideal day, what activities are you doing?", hasTextbox: true, textboxPrompt: "Think about both work and personal activities that would make you feel fulfilled." }
-    ]
-  },
-  {
-    title: "YOUR Work Environment Preferences",
-    questions: [
-      { type: "radio", text: "What work setting appeals to you most?", options: ["Home office/remote", "Traditional office environment", "Flexible/hybrid arrangement", "Outdoor settings", "Travel frequently", "Various locations", "Laboratory/technical facility", "Other"] },
-      { type: "checkbox", text: "What work schedule would fit your life best? (Select all that apply)", options: ["Traditional 9-5 weekdays", "Flexible hours", "Part-time", "Night shifts", "Weekend work", "Seasonal work", "Project-based work", "Other"] },
-      { type: "rating", text: "How important is high income versus meaningful work to you?", scale: 5, labels: ["Meaningful work most important", "High income most important"] },
-      { type: "textarea", text: "Describe the type of company culture or work environment where you thrive", hasTextbox: true, textboxPrompt: "Think about atmosphere, values, communication style, etc." }
-    ]
-  },
-  {
-    title: "YOUR Goals & Dreams (Motivation & Vision)",
-    questions: [
-      { type: "textarea", text: "What does success look like to you in 5 years?", hasTextbox: true, textboxPrompt: "Think about career, personal life, lifestyle, relationships, impact, etc." },
-      { type: "checkbox", text: "What are your top priorities right now? (Select all that apply)", options: ["Career growth", "Financial stability", "Work-life balance", "Personal relationships", "Health and wellness", "Education/learning", "Creative expression", "Community involvement", "Family", "Other"] },
-      { type: "rating", text: "How motivated are you to make significant changes in your life?", scale: 5, labels: ["Not motivated", "Very motivated"] },
-      { type: "textarea", text: "What's driving your interest in career or education changes right now?", hasTextbox: true, textboxPrompt: "What's happening in your life that's making you want to explore new directions?" },
-      { type: "radio", text: "How quickly do you want to see results from new learning or career changes?", options: ["I need immediate results", "Within 6 months", "Within 1-2 years", "I'm patient for long-term goals", "No specific timeline"] },
-      { type: "textarea", text: "What would you regret NOT pursuing if you look back in 10 years?", hasTextbox: true, textboxPrompt: "Think about opportunities, experiences, or paths you don't want to miss." },
-      { type: "checkbox", text: "What outcomes are most important to you in your next career or educational step? (Select all that apply)", options: ["High income potential", "Job security", "Creative fulfillment", "Helping others", "Recognition/prestige", "Flexibility/autonomy", "Continuous learning opportunities", "Work-life balance", "Other"] },
-      { type: "textarea", text: "Who are your role models or people who inspire you?", hasTextbox: true, textboxPrompt: "This could be people you know personally, public figures, or fictional characters." },
-      { type: "textarea", text: "What kind of legacy do you want to leave or impact do you want to have?", hasTextbox: true, textboxPrompt: "Think about how you want to be remembered or what you want to contribute to the world." }
-    ]
-  },
-  {
-    title: "What Holds YOU Back (Obstacles & Challenges)",
-    questions: [
-      { type: "checkbox", text: "What obstacles are you currently facing? (Select all that apply)", options: ["Financial constraints", "Time limitations", "Family obligations", "Health issues", "Lack of information", "Fear of failure", "Imposter syndrome", "Age-related concerns", "Location limitations", "Lack of support", "Other"] },
-      { type: "textarea", text: "What has held you back from pursuing your goals in the past?", hasTextbox: true, textboxPrompt: "Be honest about both external barriers and internal fears or doubts." },
-      { type: "rating", text: "How confident are you in your ability to overcome challenges?", scale: 5, labels: ["Not confident", "Very confident"] },
-      { type: "textarea", text: "What support systems do you have? (family, friends, mentors, communities)", hasTextbox: true, textboxPrompt: "Think about who you can count on for encouragement, advice, or practical help." },
-      { type: "radio", text: "How do you typically handle setbacks or failures?", options: ["Push through immediately", "Take time to regroup and plan", "Seek help from others", "Change my approach", "Take a break and revisit later", "Often give up"] },
-      { type: "textarea", text: "What skills or knowledge do you feel you're missing to reach your goals?", hasTextbox: true, textboxPrompt: "Think about both technical skills and soft skills." },
-      { type: "rating", text: "How much does fear of failure influence your decisions?", scale: 5, labels: ["No influence", "Major influence"] },
-      { type: "textarea", text: "What would you attempt if you knew you couldn't fail?", hasTextbox: true, textboxPrompt: "This can help identify what fear might be holding you back from." },
-      { type: "textarea", text: "What practical steps could you take to address your biggest obstacles?", hasTextbox: true, textboxPrompt: "Think about specific, actionable things you could do to move forward." }
-    ]
-  },
-  {
-    title: "YOUR Success Stories (Positive Experiences)",
-    questions: [
-      { type: "textarea", text: "Describe a significant accomplishment you're proud of", hasTextbox: true, textboxPrompt: "This could be from work, school, personal life, volunteering, etc." },
-      { type: "textarea", text: "Tell me about a time you overcame a major challenge or obstacle", hasTextbox: true, textboxPrompt: "What strategies did you use? What did you learn about yourself?" },
-      { type: "textarea", text: "When have you helped others achieve their goals or solve problems?", hasTextbox: true, textboxPrompt: "Think about formal mentoring, informal help, or any way you've made a difference." },
-      { type: "textarea", text: "What project or achievement taught you the most about yourself?", hasTextbox: true, textboxPrompt: "What did you discover about your strengths, interests, or values?" },
-      { type: "checkbox", text: "What strengths do others often compliment you on? (Select all that apply)", options: ["Problem-solving", "Communication", "Leadership", "Creativity", "Organization", "Empathy/emotional intelligence", "Technical skills", "Reliability", "Teaching/explaining", "Teamwork", "Other"] },
-      { type: "textarea", text: "Describe a time when you had to learn something completely new - how did you approach it?", hasTextbox: true, textboxPrompt: "Think about your learning process and what strategies worked." },
-      { type: "textarea", text: "What's something you've taught others successfully?", hasTextbox: true, textboxPrompt: "This could be formal teaching or informal sharing of knowledge/skills." },
-      { type: "rating", text: "How good are you at finishing projects or commitments you start?", scale: 5, labels: ["Rarely finish", "Always finish"] }
-    ]
-  },
-  {
-    title: "YOUR Values & Community (What Matters)",
-    questions: [
-      { type: "checkbox", text: "What values are most important to you? (Select all that apply)", options: ["Honesty/integrity", "Creativity", "Security/stability", "Freedom/independence", "Achievement", "Service to others", "Family", "Adventure", "Justice/fairness", "Learning/growth", "Other"] },
-      { type: "textarea", text: "How important is making a positive impact on others in your work or life?", hasTextbox: true, textboxPrompt: "Think about whether and how you want to help, serve, or influence others." },
-      { type: "radio", text: "Do you prefer working independently or collaboratively?", options: ["Strongly prefer working alone", "Prefer working alone", "No strong preference", "Prefer working with others", "Strongly prefer working with others"] },
-      { type: "textarea", text: "What causes or issues do you care deeply about?", hasTextbox: true, textboxPrompt: "This could be social, environmental, political, or any other issues that matter to you." },
-      { type: "rating", text: "How important is work-life balance to you?", scale: 5, labels: ["Not important", "Extremely important"] },
-      { type: "textarea", text: "How do you want to contribute to your community or society?", hasTextbox: true, textboxPrompt: "Think about both local community and broader society." },
-      { type: "textarea", text: "What does diversity and inclusion mean to you, and how important is it in your work environment?", hasTextbox: true, textboxPrompt: "Consider how diversity affects your comfort and effectiveness at work." }
-    ]
-  },
-  {
-    title: "Money & Practical Concerns (Financial Reality)",
-    questions: [
-      { type: "radio", text: "What's your current household income range?", options: ["Under $25,000", "$25,000-$50,000", "$50,000-$75,000", "$75,000-$100,000", "$100,000-$150,000", "Over $150,000", "Prefer not to say"] },
-      { type: "radio", text: "How much can you realistically invest in education or training?", options: ["Under $1,000", "$1,000-$5,000", "$5,000-$15,000", "$15,000-$30,000", "Over $30,000", "I need free or low-cost options", "I need financial aid"] },
-      { type: "checkbox", text: "What financial aid options are you interested in? (Select all that apply)", options: ["Scholarships", "Grants", "Student loans", "Work-study programs", "Employer tuition assistance", "Payment plans", "Income-based repayment", "Other"] },
-      { type: "textarea", text: "Do you have any unique circumstances that might qualify you for specific scholarships or aid?", hasTextbox: true, textboxPrompt: "This could include background, experiences, location, field of study, etc." },
-      { type: "radio", text: "How important is it to earn money while you're learning or training?", options: ["Essential - I must work while learning", "Very important", "Somewhat important", "Not important - I can focus on learning", "Not applicable"] },
-      { type: "rating", text: "How comfortable are you with taking on educational debt?", scale: 5, labels: ["Very uncomfortable", "Very comfortable"] },
-      { type: "textarea", text: "What's your target income goal after completing additional training or education?", hasTextbox: true, textboxPrompt: "Think about both starting salary and longer-term earning potential." }
-    ]
-  },
-  {
-    title: "YOUR Career Personality (Optional Assessment)",
-    questions: [
-      { type: "radio", text: "Do you prefer routine and predictability or variety and change in your work?", options: ["Love routine and predictability", "Prefer routine with some variety", "Like a good mix of both", "Prefer variety with some routine", "Crave constant change and new challenges"] },
-      { type: "checkbox", text: "What work activities appeal to you most? (Select all that apply)", options: ["Analyzing data and information", "Creating content or designs", "Managing people and projects", "Solving technical problems", "Building relationships", "Working with your hands", "Teaching or training others", "Performing or presenting", "Other"] },
-      { type: "radio", text: "How do you prefer to make decisions?", options: ["Quickly with gut instinct", "After some research and thought", "After extensive analysis", "With input from others", "Very slowly and carefully"] },
-      { type: "rating", text: "How comfortable are you with taking risks?", scale: 5, labels: ["Very risk-averse", "Very comfortable with risk"] },
-      { type: "radio", text: "In group settings, do you prefer to lead or follow?", options: ["Always prefer to lead", "Usually prefer to lead", "Depends on the situation", "Usually prefer to follow", "Always prefer to follow"] },
-      { type: "textarea", text: "What type of recognition or rewards motivate you most?", hasTextbox: true, textboxPrompt: "Think about public recognition, private feedback, monetary rewards, advancement opportunities, etc." }
-    ]
-  },
-  {
-    title: "YOUR Next Steps (Action & Commitment)",
-    questions: [
-      { type: "radio", text: "What's your realistic timeline for making significant changes?", options: ["I want to start immediately", "Within 3 months", "Within 6 months", "Within 1 year", "1-2 years", "More than 2 years", "No specific timeline"] },
-      { type: "textarea", text: "What specific information do you need most to move forward with your goals?", hasTextbox: true, textboxPrompt: "Think about career details, educational requirements, financial information, etc." },
-      { type: "checkbox", text: "What type of support would be most helpful to you? (Select all that apply)", options: ["Career counseling", "Financial aid guidance", "Academic advising", "Mentorship", "Skills assessment", "Job search help", "Networking opportunities", "Practical planning assistance", "Other"] },
-      { type: "rating", text: "How ready are you to take concrete action on your goals?", scale: 5, labels: ["Not ready yet", "Ready to act now"] },
-      { type: "textarea", text: "What's your biggest remaining question or concern about moving forward?", hasTextbox: true, textboxPrompt: "What's still holding you back or making you uncertain?" },
-      { type: "textarea", text: "What would you like to commit to doing in the next 30 days to move toward your goals?", hasTextbox: true, textboxPrompt: "Think about small, specific steps you can realistically take." }
+      { type: "textarea", text: "What is the #1 reason you want a new career right now?" },
+      { type: "textarea", text: "If money were no object, what would you spend your Tuesday doing?" },
+      { type: "textarea", text: "What is a dream job you think is currently out of your reach?" },
+
+      {
+        type: "radio",
+        text: "How many months are you willing to train before you need to start earning?",
+        options: ["0–1", "2–3", "4–6", "7–12", "12+"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context (timeline pressure, part-time needs, flexibility)."
+      },
+      {
+        type: "radio",
+        text: "Are you looking for a job (money) or a career (growth/identity)?",
+        options: ["Job", "Career", "Not sure"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain what you mean by job vs career for you."
+      },
+      {
+        type: "radio",
+        text: "Does helping your community drive your choices, or financial independence?",
+        options: ["Helping my community", "Financial independence", "Both equally"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+
+      { type: "text", text: "What is the one subject in school you genuinely enjoyed?" },
+      { type: "text", text: "What is the one subject you absolutely hated?" },
+
+      {
+        type: "radio",
+        text: "Are you more afraid of failure or wasted time?",
+        options: ["Failure", "Wasted time", "Both", "Neither / not sure"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "If you could move to any city for a free job/training, would you?",
+        options: ["Yes", "No", "Maybe"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add constraints (family, cost of living, region preferences)."
+      },
+      {
+        type: "radio",
+        text: "Do you want your work to be something you leave at the office or something you think about at home?",
+        options: ["Leave it at the office", "Think about it at home", "Some of both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "Is having a prestigious job title important to you?",
+        options: ["Yes", "No", "Somewhat", "Not sure"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+
+      { type: "text", text: "What is your ideal starting salary to feel like this change was worth it?" },
+      { type: "textarea", text: "Do you have any non-negotiables (for example, no weekends, must be remote, no heavy lifting)?" },
+
+      {
+        type: "radio",
+        text: "If you had to choose: a job that is boring but easy, or stressful but high-paying?",
+        options: ["Boring but easy", "Stressful but high-paying", "Neither / want a third option"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: explain your choice."
+      },
+      {
+        type: "radio",
+        text: "Do you want a job where you are the face of the company or the engine behind the scenes?",
+        options: ["Face of the company", "Engine behind the scenes", "Both"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context."
+      },
+      {
+        type: "radio",
+        text: "How much do you value job security versus high growth potential?",
+        options: ["Strongly job security", "Lean job security", "Balanced", "Lean high growth", "Strongly high growth"],
+        hasTextbox: true,
+        textboxPrompt: "Optional: add context (risk tolerance, financial responsibilities)."
+      },
+
+      { type: "textarea", text: "Describe your dream job if money were no object." },
+      {
+        type: "textarea",
+        text: "Describe a professional or personal accomplishment you are most proud of. What was the specific skill you used to achieve it, and what part of the process did you enjoy the most (planning, execution, problem-solving, final result, or recognition)?"
+      },
+      {
+        type: "textarea",
+        text: "Imagining your life 10 years from now, what would have to be true about your job in order for you to feel completely fulfilled and not consider it just a job? Focus on your sense of identity, daily impact, and mental well-being, not just salary or title."
+      }
     ]
   }
 ];
+
 
 class QuestionnaireApp {
   constructor() {
