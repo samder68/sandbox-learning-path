@@ -879,119 +879,70 @@ class QuestionnaireApp {
 // Master prompt from outputprompt.txt 
 const outputPromptText = `prompt:
 
-**Goal:** The goal of this questionnaire is to help individuals discover personalized learning and career paths by evaluating their personality, skills, interests, learning style, demographics, time commitment, and location. The aim is to provide actionable, location-aware recommendations that empower users to explore new opportunities, whether they are transitioning careers, returning to education, or seeking skills development.
 
-**Methodology:** The AI will analyze the user's questionnaire responses to assess their unique profile. It will consider strengths, preferences, challenges, and available resources. Based on this analysis, the AI will generate a tailored learning and career plan that includes specific free online courses with direct links, local training options relevant to the user's location, scholarship opportunities, and practical next steps.
+**Goal:** Help individuals discover personalized career paths and affordable training by evaluating their profile. Provide actionable, location-aware recommendations.
 
-**PRIORITY FREE LEARNING PLATFORMS:** When recommending courses, prioritize drawing from these verified free educational platforms in order of preference:
+**CRITICAL LINKING RULE:** To prevent broken links, prioritize "Search-Logic URLs." 
+- If a direct link is used, follow it with a Google Search fallback.
+- Format: [Course Name] - [Platform] - [Link] | [Search Fallback]
 
-**Tier 1 - Completely Free Platforms:**
-- MIT OpenCourseWare
-- Khan Academy
-- freeCodeCamp
-- Harvard CS50 (edx.org/cs50)
-- Google Skillshop
-- HubSpot Academy
-- Microsoft Learn
-- YouTube official educational channels (specific named courses only)
+**PRIORITY PLATFORMS (Search-Logic Enabled):**
+1. MIT OpenCourseWare: https://ocw.mit.edu/search/?q=[Course+Name]
+2. Khan Academy: https://www.khanacademy.org/search?page_search_query=[Course+Name]
+3. Coursera (Audit): https://www.coursera.org/search?query=[Course+Name]
+4. edX (Audit): https://www.edx.org/search?q=[Course+Name]
+5. Google Skillshop: https://skillshop.exceedlms.com/student/catalog/list?q=[Course+Name]
 
-**Tier 2 - Free Access Available:**
-- Coursera (audit mode for free access)
-- edX (audit mode for free access)
-- Udemy (free courses section)
-- FutureLearn (free access option)
-- Alison
-- Class Central (aggregator for free courses)
+**SCHOLARSHIP SEARCH METHODOLOGY:**
+Search across Field-Specific, Demographic, and Geographic categories. 
+MANDATORY: Use verified aggregators for stability:
+- CareerOneStop (Dept. of Labor): https://www.careeronestop.org/Toolkit/Training/find-scholarships.aspx
+- Fastweb: https://www.fastweb.com
+- Scholarships.com: https://www.scholarships.com
+- Federal Pell Grants: https://studentaid.gov/understand-aid/types/grants/pell
 
-**Tier 3 - University Open Learning:**
-- Stanford Online
-- Open Learning Initiative (Carnegie Mellon)
-- Open Learning Initiative (Harvard)
-- OpenUW (University of Washington)
-- Open Yale
-- Open.Michigan (University of Michigan)
-- OpenLearn (The Open University)
+**OUTPUT TEMPLATE:**
 
-**Tier 4 - Specialized Free Platforms:**
-- Udacity (free tier)
-- Codecademy (free tier)
-- Other verified free educational resources
+Perfect! Based on your responses, here is your personalized learning profile:
 
-**COMPREHENSIVE SCHOLARSHIP AND GRANT SEARCH METHODOLOGY:**
-When identifying scholarship opportunities, conduct a thorough search across multiple categories to ensure the most affordable options and easily accessible funding opportunities. Search for and include real, verified scholarship organizations with direct links when possible:
+🎯 **YOUR LEARNING PROFILE ANALYSIS**
+**Who You Are:** [Brief summary of strengths and situation]
+**Your Advantage:** [Highlight transferable skills]
 
-**Search Categories:**
-1. **Field-Specific Scholarships:** Match scholarships to the user's career path interests (STEM, healthcare, business, trades, arts, etc.)
-2. **Demographic-Based Scholarships:** Consider age, gender, ethnicity, military status, first-generation college status, disability status, etc.
-3. **Geographic Scholarships:** Local community foundations, state-specific programs, regional organizations
-4. **Need-Based Scholarships:** Income-qualified programs, Pell grants, state financial aid
-5. **Merit-Based Scholarships:** Academic achievement, skills-based awards
-6. **Employer/Industry Scholarships:** Professional associations, major corporations in relevant fields
-7. **Non-Traditional Student Scholarships:** Adult learners, career changers, returning students
-8. **International Scholarships:** For global learning opportunities when applicable
-
-**Verified Scholarship Organization Types to Include:**
-- National scholarship foundations (e.g., Gates Foundation, Coca-Cola Scholars)
-- Professional association scholarships
-- Corporate scholarship programs
-- Community foundation scholarships
-- State and federal grant programs
-- University-specific scholarships
-- Trade organization scholarships
-- Minority-serving organization scholarships
-- Women's educational foundations
-- Veteran and military family scholarships
-
-**Template:** The output must follow this structure and tone:
-
-Perfect! Based on your responses, here's your personalized learning profile and recommendations:
-
-**🎯 YOUR LEARNING PROFILE ANALYSIS**
-**Who You Are:** [Brief summary of personality, strengths, background, and current situation, using the questionnaire data]
-**Your Advantage:** [Highlight key skills and transferable strengths]
-
-**🎓 YOUR TOP LEARNING PATH MATCHES**
-[List 3–4 career/learning paths that fit the user's profile. For each path:]
-
+🎓 **YOUR TOP LEARNING PATH MATCHES**
+[Provide 3 matches. For each:]
 **Path Name:**
-- **Perfect For:** [Who this path suits]
-- **Why This Fits:** [Why it matches the user's profile]
-- **Free Courses to Start:** [Include ONLY real, currently available free online courses with exact names and TESTED direct links, plus a link to the main site/platform. CRITICAL: Prioritize courses from the Priority Free Learning Platforms list above, starting with Tier 1 platforms. Only include links you can verify are working and lead directly to the course. For Coursera and edX courses, specify "audit for free" and provide the exact course title and platform name with direct working links only if you can verify the URL. Format as: "Course Title" - Platform Name - [Direct Link] - [Link to main platform] - [brief note about free access method]. Provide enough detail that users can easily find the course through the platform's search function. Do NOT include any links unless you can guarantee they work. If uncertain about specific course links, provide: "Course Title" - Platform Name - [Link to main platform] - [search instructions]. Do NOT suggest generic YouTube searches - only include specific, named courses from reputable educational platforms listed above.]
+- **Why This Fits:** [Rationale based on user data]
+- **Learning Stack (Free):**
+  1. [Course Name] - [Platform] - [Search-Logic URL]
+     - *Access:* (e.g., "Select 'Audit' to learn for free")
+  2. [Course Name] - [Platform] - [Search-Logic URL]
 
-**💰 SCHOLARSHIP OPPORTUNITIES FOR YOU**
-[Conduct comprehensive search across all categories listed in the Scholarship Search Methodology. List real, specific scholarship opportunities with organization names, brief descriptions, and direct links to application pages when possible. Include both national and location-specific scholarships. CRITICAL: Only include established, verified scholarship organizations with real names and current programs. For each scholarship, provide: Organization Name - Scholarship Program Name - [Direct Link to Application/Info Page] - [Link to Main Organization Website] - Brief eligibility description. If direct application links cannot be verified, provide: Organization Name - Scholarship Program Name - [Link to Main Organization Website] - Search instructions. Include scholarships from multiple categories: field-specific, demographic-based, geographic, need-based, merit-based, employer/industry, non-traditional student, and international when applicable.]
+💰 **FINANCIAL AID & SCHOLARSHIPS**
+- [Scholarship Name/Org] - [Direct Link or Main Site]
+- [Local Grant/WIOA Link] - [Direct Link or Main Site]
+- *Tip:* [Brief advice on application difficulty or deadlines]
 
-**🗺️ LOCAL TRAINING OPTIONS**
-[Provide real, specific local training options such as named community colleges, trade schools, libraries, workforce development centers, or adult education programs. CRITICAL: Only include verified direct links to actual pages, or link directly to the main institutional website. DO NOT create fake URLs. Include actual institution names and current programs when possible, tailored to the user's location as indicated in the questionnaire. FORMAT: Each institution should be on its own line with a line break between institutions for better readability. Add note: "If any link doesn't work, visit the main website and search for 'continuing education' or 'professional development.'"]
+🗺️ **LOCAL TRAINING OPTIONS**
+[Based on user location, list verified institutions:]
+- [Institution Name] - [Main Website URL]
+- *Note:* If a link is outdated, search the site for "Continuing Education."
 
-**📝 YOUR ESSAY MATERIAL BANK**
-[Include sample essay themes or prompts based on the user's responses, useful for applications, interviews, or personal reflection]
+📝 **YOUR APPLICATION MATERIAL AND NARRATIVE BANK**
+**Resume Objectives:**
+- [Draft 3-4 specific, high-impact resume objective statements tailored to the new career path using the user's existing strengths]
 
-**🎯 YOUR NEXT STEPS (This Week)**
-[List clear, actionable steps for the user to take immediately]
+**Application Essay & Interview Themes:**
+- [Provide 3-4 deep narrative themes or prompts. Explain how the user can bridge their past experiences (e.g., retail, delivery) to their new goals (e.g., IT, Green Tech)]
 
-**💌 ENCOURAGEMENT FOR YOUR JOURNEY**
-[Offer supportive, uplifting advice and motivation]
+🎯 **YOUR NEXT STEPS (THIS WEEK)**
+1. [Specific action]
+2. [Specific action]
 
-**Note:** We apologize that some links may be broken or outdated. If any link doesn't work, please use a search engine to search for the name in the description.
+💌 **ENCOURAGEMENT**
+[Supportive closing statement]
 
-**Main Platform Links:**¹
-[Include a footnote section listing all main website URLs for every platform, institution, and organization mentioned in the response, formatted as a simple bulleted list with organization name and main website URL]
-
-**Instructions:**
-- Use plain, accessible language suitable for any age or background.
-- Do not specify any region or state unless it is directly relevant to the user's location as provided in the questionnaire.
-- Always tailor recommendations to the user's unique profile and location.
-- CRITICAL: Only include verified, working links. If you cannot verify a link works, do not include it. For course recommendations, prioritize the Priority Free Learning Platforms list above, starting with Tier 1 completely free platforms. For each course recommendation: 1) Free courses from major platforms with verified links, 2) Exact course titles with search instructions if links cannot be verified, 3) Platform identification with main platform link, 4) Clear free access instructions (audit for free, free tier, completely free, etc.).
-- For scholarship opportunities: Conduct comprehensive search using the Scholarship Search Methodology. Only include verified scholarship organizations with real names and current programs. Provide direct links to application pages when possible, or main organization websites with search instructions.
-- For local training options: Only include verified institutional websites or direct links to continuing education pages. If you cannot verify the link, only include the institution name and main website with link to main platform.
-- Include the note: "If any link doesn't work, visit the main website and search for the relevant terms."
-- Avoid suggesting general searches - provide specific course names and platforms only from the Priority Free Learning Platforms list.
-- Ensure proper formatting with line breaks between local training institutions for better readability.
-- MANDATORY: For all course recommendations, prioritize completely free platforms (Tier 1) first, then free-access platforms (Tier 2-4). Include both the direct course link (if verified) AND a link to the main platform/site.
-- MANDATORY: For scholarship recommendations, search across all categories in the Scholarship Search Methodology to provide the most comprehensive and affordable funding opportunities.
-- MANDATORY: Include the apology note about potentially broken links and instructions to search for names if links don't work.
-- MANDATORY: Include a footnote section with all main platform URLs mentioned in the response.
-- MANDATORY: When recommending courses, explicitly state the free access method for each platform (e.g., "completely free," "audit for free," "free tier available," etc.).`;
+**Main Platform Directory:**
+[Footnote list of all root URLs used above]`;
 
 document.addEventListener('DOMContentLoaded', () => new QuestionnaireApp());
